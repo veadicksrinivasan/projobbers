@@ -1,0 +1,247 @@
+/* coding.css - Styling for the AI Coding Assessment System */
+
+/* View handling */
+.coding-view-hidden {
+  display: none !important;
+}
+
+/* ── Library View ── */
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filters-bar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 16px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.filter-select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-select:focus, .filter-select:hover {
+  border-color: var(--accent-blue);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 250px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+/* Datatable */
+.questions-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.questions-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.questions-table th {
+  padding: 16px 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.questions-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.questions-table tr:last-child td {
+  border-bottom: none;
+}
+
+.questions-table tbody tr:hover td {
+  background: var(--bg-card-hover);
+}
+
+.q-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.q-title:hover {
+  color: var(--accent-blue);
+}
+
+/* Badges for Difficulty */
+.diff-easy { color: var(--accent-green); background: rgba(16, 212, 142, 0.1); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.diff-medium { color: var(--accent-orange); background: rgba(249, 115, 22, 0.1); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.diff-hard { color: var(--accent-pink); background: rgba(236, 72, 153, 0.1); padding: 4px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.page-controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* ── Editor View ── */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: calc(100vh - 120px);
+  min-height: 600px;
+}
+
+@media (max-width: 900px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.problem-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.problem-header {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.problem-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.problem-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.problem-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.problem-desc pre {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  margin: 16px 0;
+  overflow-x: auto;
+  font-family: monospace;
+  color: var(--text-primary);
+}
+
+.editor-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-area {
+  flex: 1;
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: 'Consolas', monospace;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  padding: 20px;
+  resize: none;
+  outline: none;
+  line-height: 1.5;
+}
+
+.editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid var(--border);
+}
+
+.output-console {
+  background: #000;
+  border-top: 1px solid var(--border);
+  padding: 16px 20px;
+  font-family: monospace;
+  color: var(--accent-green);
+  min-height: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.output-console.error {
+  color: var(--accent-pink);
+}

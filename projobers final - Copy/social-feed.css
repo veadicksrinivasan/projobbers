@@ -1,0 +1,258 @@
+/* ================================================
+   social-feed.css
+   Dark-themed styles for the Interview Experience Hub
+   Fixes white-background bug on form inputs & feed components
+   ================================================ */
+
+/* ------------------------------------------------
+   FORM CONTROLS — global dark override
+   Browsers apply a white background by default to
+   <input>, <textarea>, and <select>. We override
+   that here so every form element on community.html
+   matches the platform dark theme.
+   ------------------------------------------------ */
+.form-control {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.9rem !important;
+  padding: 10px 14px !important;
+  outline: none !important;
+  transition: var(--transition) !important;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-control::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.form-control:hover {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+.form-control:focus {
+  border-color: var(--border-accent) !important;
+  background: rgba(79, 142, 247, 0.06) !important;
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.12) !important;
+}
+
+/* Textarea specific — ensure resize handle is visible on dark bg */
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+/* Select element arrow tint */
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238892b0' d='M6 8L0 0h12z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  padding-right: 36px !important;
+}
+
+/* Options inside <select> — some browsers respect this */
+select.form-control option {
+  background: #0d1225;
+  color: var(--text-primary);
+}
+
+/* Checkbox styling */
+input[type="checkbox"] {
+  accent-color: var(--accent-blue);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* Form label */
+.form-group label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------
+   COMPOSER / POST WRITER
+   ------------------------------------------------ */
+.post-composer {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(20px);
+  transition: var(--transition);
+}
+
+.post-composer:hover {
+  border-color: var(--border-accent);
+}
+
+.composer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.composer-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  resize: none;
+  outline: none;
+  min-height: 48px;
+  transition: var(--transition);
+  line-height: 1.6;
+}
+
+.composer-input::placeholder {
+  color: var(--text-muted);
+}
+
+.composer-input:focus {
+  border-color: var(--border-accent);
+  background: rgba(79, 142, 247, 0.06);
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.12);
+}
+
+/* ------------------------------------------------
+   COMMENT INPUT
+   ------------------------------------------------ */
+.comment-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.comment-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  padding: 9px 16px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.comment-input::placeholder {
+  color: var(--text-muted);
+}
+
+.comment-input:focus {
+  border-color: var(--border-accent);
+  background: rgba(79, 142, 247, 0.06);
+  box-shadow: 0 0 0 2px rgba(79, 142, 247, 0.12);
+}
+
+/* ------------------------------------------------
+   EXPERIENCE CARD — enhanced
+   ------------------------------------------------ */
+.experience-card {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(20px);
+}
+
+.experience-card .card-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* Difficulty badge colours */
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.difficulty-badge.easy   { background: rgba(16,212,142,0.15); color: var(--accent-green); border: 1px solid rgba(16,212,142,0.3); }
+.difficulty-badge.medium { background: rgba(249,115,22,0.15);  color: var(--accent-orange); border: 1px solid rgba(249,115,22,0.3); }
+.difficulty-badge.hard   { background: rgba(236,72,153,0.15);   color: var(--accent-pink);   border: 1px solid rgba(236,72,153,0.3); }
+
+/* ------------------------------------------------
+   SHARE MODAL IMPROVEMENTS
+   ------------------------------------------------ */
+.quiz-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.quiz-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.quiz-container {
+  width: 100%;
+  max-width: 700px;
+  animation: modalSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes modalSlideIn {
+  from { transform: translateY(24px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+/* ------------------------------------------------
+   QUESTION BANK HIGHLIGHT
+   ------------------------------------------------ */
+.qbank-item {
+  transition: var(--transition);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin: 0 -4px;
+}
+
+.qbank-item:hover {
+  background: rgba(79, 142, 247, 0.06);
+}
+
+.qbank-item .q-text {
+  color: var(--text-primary);
+}
+
+/* ------------------------------------------------
+   INTERACTION BAR HOVER GLOW
+   ------------------------------------------------ */
+.interaction-btn:hover {
+  color: var(--accent-blue) !important;
+}
+
+.interaction-btn.liked {
+  color: var(--accent-pink) !important;
+}

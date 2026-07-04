@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Learning & Analytics — Projobbers</title>
+  <meta name="description" content="Track your skill improvement, take recommended courses, and view predictive career analytics."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ── Course Card ── */
+    .course-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+    .course-card:hover { border-color: var(--border-accent); transform: translateY(-3px); box-shadow: var(--shadow-card); }
+    
+    .course-image {
+      height: 140px;
+      background: var(--bg-secondary);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .course-badge {
+      position: absolute; top: 12px; right: 12px;
+    }
+    
+    .course-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .course-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+    .course-meta { display: flex; align-items: center; gap: 12px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 12px; }
+    .course-provider { display: flex; align-items: center; gap: 6px; }
+    .course-rating { color: #fbbf24; font-weight: 600; }
+    
+    .course-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; flex: 1; }
+    
+    /* ── Chart Layout ── */
+    .analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+    @media (max-width: 900px) { .analytics-grid { grid-template-columns: 1fr; } }
+    
+    .chart-container { position: relative; width: 100%; height: 300px; }
+    
+    /* ── Improvement Item ── */
+    .improvement-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px; background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      margin-bottom: 12px; transition: var(--transition);
+    }
+    .improvement-item:hover { background: rgba(255,255,255,0.04); }
+    .imp-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+    .imp-info { flex: 1; }
+    .imp-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    .imp-trend { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 700; color: var(--accent-green); }
+    
+    /* Logo adjustments */
+    .nav-logo-img { height: 44px; border-radius: 8px; object-fit: contain; }
+  </style>
+</head>
+<body>
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<button class="hamburger" id="hamburger">☰</button>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn">💬</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Growth & Analytics</span></div>
+      <h2>📈 AI <span class="gradient-text">Growth Tracker & Courses</span></h2>
+      <p>Monitor your skill improvements over time and take hand-picked courses to level up.</p>
+    </div>
+
+    <!-- Analytics Dashboard -->
+    <div class="analytics-grid">
+      <!-- Growth Chart -->
+      <div class="card fade-in">
+        <h3 style="margin-bottom:8px;">🚀 Skill Progression Timeline</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:24px;">Your verified skill scores mapped over the last 6 months.</p>
+        <div class="chart-container">
+          <canvas id="growthChart"></canvas>
+        </div>
+      </div>
+      
+      <!-- Top Improvements -->
+      <div class="card fade-in fade-in-delay-1">
+        <h3 style="margin-bottom:20px;">💪 Top Improvements</h3>
+        
+        <div class="improvement-item">
+          <div class="imp-icon" style="background:rgba(6,214,214,0.15)">🧱</div>
+          <div class="imp-info">
+            <div class="imp-title">System Design <span class="imp-trend">↑ 18%</span></div>
+            <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="74%" style="width:0%;background:var(--gradient-cyan)"></div></div>
+          </div>
+        </div>
+        
+        <div class="improvement-item">
+          <div class="imp-icon" style="background:rgba(139,92,246,0.15)">☁️</div>
+          <div class="imp-info">
+            <div class="imp-title">AWS Architecture <span class="imp-trend">↑ 14%</span></div>
+            <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="65%" style="width:0%;background:var(--gradient-primary)"></div></div>
+          </div>
+        </div>
+        
+        <div class="improvement-item">
+          <div class="imp-icon" style="background:rgba(16,212,142,0.15)">🐍</div>
+          <div class="imp-info">
+            <div class="imp-title">Python <span class="imp-trend">↑ 8%</span></div>
+            <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="82%" style="width:0%;background:var(--gradient-green)"></div></div>
+          </div>
+        </div>
+        
+        <div style="margin-top:20px; padding:16px; background:linear-gradient(135deg,rgba(79,142,247,0.1),rgba(139,92,246,0.05)); border:1px solid rgba(79,142,247,0.2); border-radius:var(--radius-md);">
+          <div style="font-size:0.8rem; font-weight:700; color:var(--accent-blue); margin-bottom:4px;">🤖 AI Insight</div>
+          <p style="font-size:0.8rem; color:var(--text-secondary); line-height:1.5;">Your steady growth in System Design has unlocked <strong>24% more job matches</strong> for Senior and Staff Engineer roles this month.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recommended Courses -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:20px; margin-top:40px;">
+      <div>
+        <h3 style="font-size:1.4rem;">🎓 AI-Recommended Courses</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Curated content exactly mapped to your roadmap gaps.</p>
+      </div>
+      <a href="#" class="btn btn-outline btn-sm">View Learning Path</a>
+    </div>
+    
+    <div class="grid-3">
+      <!-- Course 1 -->
+      <div class="course-card fade-in">
+        <div class="course-image" style="background:linear-gradient(135deg, #1e293b, #0f172a);">
+          🧱
+          <span class="badge badge-purple course-badge">Roadmap Priority</span>
+        </div>
+        <div class="course-content">
+          <div class="course-title">Grokking the System Design Interview</div>
+          <div class="course-meta">
+            <span class="course-rating">★ 4.9</span>
+            <span>⏱️ 16 hours</span>
+            <span>Beginner to Advanced</span>
+          </div>
+          <p class="course-desc">Master the components of scalable systems and prepare perfectly for FAANG-level engineering interviews. Fills your largest identified roadmap gap.</p>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="flex:1;justify-content:center;">Start Course</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Course 2 -->
+      <div class="course-card fade-in fade-in-delay-1">
+        <div class="course-image" style="background:linear-gradient(135deg, #1e3a8a, #0f172a);">
+          ☁️
+          <span class="badge badge-blue course-badge">Skill Gap</span>
+        </div>
+        <div class="course-content">
+          <div class="course-title">AWS Certified Solutions Architect</div>
+          <div class="course-meta">
+            <span class="course-rating">★ 4.8</span>
+            <span>⏱️ 24 hours</span>
+            <span>Intermediate</span>
+          </div>
+          <p class="course-desc">Deep dive into AWS cloud architecture patterns, microservices deployment, and serverless. Highly recommended based on your recent job preferences.</p>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="flex:1;justify-content:center;">Start Course</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Course 3 -->
+      <div class="course-card fade-in fade-in-delay-2">
+        <div class="course-image" style="background:linear-gradient(135deg, #064e3b, #0f172a);">
+          🐳
+          <span class="badge badge-green course-badge">Trending Match</span>
+        </div>
+        <div class="course-content">
+          <div class="course-title">Docker & Kubernetes: The Practical Guide</div>
+          <div class="course-meta">
+            <span class="course-rating">★ 4.9</span>
+            <span>⏱️ 12 hours</span>
+            <span>Intermediate</span>
+          </div>
+          <p class="course-desc">Learn how to orchestrate containers natively. This skill appeared in 82% of your top job matches this week. Mastering this boosts your match rate significantly.</p>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-primary" style="flex:1;justify-content:center;">Start Course</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Growth Line Chart
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    
+    // Gradient for the line
+    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(79, 142, 247, 0.4)');
+    gradient.addColorStop(1, 'rgba(79, 142, 247, 0.0)');
+    
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+        datasets: [
+          {
+            label: 'System Design',
+            data: [42, 48, 55, 62, 68, 74],
+            borderColor: '#06d6d6',
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            tension: 0.4,
+            pointBackgroundColor: '#06d6d6',
+            pointRadius: 4,
+          },
+          {
+            label: 'Overall AI Score',
+            data: [68, 72, 75, 79, 84, 87],
+            borderColor: '#4f8ef7',
+            backgroundColor: gradient,
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#4f8ef7',
+            pointRadius: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { color: '#8892b0', font: { family: 'Outfit', size: 12 }, usePointStyle: true, boxWidth: 8 }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(13, 18, 37, 0.9)',
+            titleColor: '#fff',
+            bodyColor: '#a0aec0',
+            borderColor: 'rgba(255,255,255,0.1)',
+            borderWidth: 1,
+            padding: 12,
+            boxPadding: 6
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false, drawBorder: false },
+            ticks: { color: '#8892b0', font: { family: 'Outfit' } }
+          },
+          y: {
+            min: 20, max: 100,
+            grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] },
+            ticks: { color: '#8892b0', font: { family: 'Outfit' }, stepSize: 20 }
+          }
+        }
+      }
+    });
+  });
+</script>
+  <script src="chat.js"></script>
+</body>
+</html>

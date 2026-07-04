@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Job Matcher — Projobbers</title>
+  <meta name="description" content="Find jobs with AI-powered compatibility scores. Projobbers matches your skills to the best opportunities."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    /* ── Job Card ── */
+    .job-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: start;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .job-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+    .job-card.featured {
+      border-color: rgba(79,142,247,0.3);
+      background: linear-gradient(135deg, rgba(79,142,247,0.06), rgba(139,92,246,0.04));
+    }
+
+    .job-logo {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .job-main h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .job-company { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; }
+    .job-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .job-meta { display: flex; gap: 16px; font-size: 0.78rem; color: var(--text-muted); }
+    .job-meta span { display: flex; align-items: center; gap: 4px; }
+
+    .job-match-col {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+      min-width: 110px;
+    }
+
+    .match-breakdown {
+      width: 100%;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .match-item { display: flex; flex-direction: column; gap: 3px; }
+    .match-item-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted); }
+    .match-item-label strong { color: var(--text-secondary); }
+
+    /* ── AI Explanation Panel ── */
+    .ai-panel {
+      background: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(139,92,246,0.06));
+      border: 1px solid rgba(79,142,247,0.2);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .ai-panel.open { display: block; }
+    .ai-panel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 0.82rem; font-weight: 600; color: var(--accent-blue); }
+    .ai-panel p { font-size: 0.83rem; line-height: 1.65; }
+    .ai-panel ul { margin: 8px 0 0 16px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ── Sidebar Filter ── */
+    .jobs-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+    }
+
+    .filter-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+      height: fit-content;
+    }
+
+    .filter-group { margin-bottom: 24px; }
+    .filter-group-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 12px; }
+    .filter-check-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .filter-check-item:hover { color: var(--text-primary); }
+    .filter-check-item input[type=checkbox] { accent-color: var(--accent-blue); }
+
+    .salary-range { display: flex; flex-direction: column; gap: 8px; }
+    .salary-range input[type=range] { accent-color: var(--accent-blue); width: 100%; }
+    .salary-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); }
+
+    @media (max-width: 900px) {
+      .jobs-layout { grid-template-columns: 1fr; }
+      .filter-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<button class="hamburger" id="hamburger">☰</button>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;">
+    </div>
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item active">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn">💬</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Job Matcher</span></div>
+      <h2>🎯 AI <span class="gradient-text">Job Matcher</span></h2>
+      <p>Jobs ranked by AI compatibility score — based on your skills, experience, and goals.</p>
+    </div>
+
+    <!-- Search + Chips -->
+    <div class="card" style="margin-bottom:20px; padding:16px;">
+      <div class="search-bar" style="margin-bottom:12px;">
+        <span style="color:var(--text-muted)">🔍</span>
+        <input type="text" id="jobSearch" placeholder="Search jobs, companies, or skills…" oninput="filterJobs()"/>
+        <button class="btn btn-primary btn-sm">Search</button>
+      </div>
+      <div class="filter-row">
+        <button class="filter-chip active" data-group="sort">Best Match</button>
+        <button class="filter-chip" data-group="sort">Latest</button>
+        <button class="filter-chip" data-group="sort">Highest Salary</button>
+        <div style="width:1px; background:var(--border); margin:0 4px;"></div>
+        <button class="filter-chip" data-group="type">Remote</button>
+        <button class="filter-chip" data-group="type">Hybrid</button>
+        <button class="filter-chip" data-group="type">On-site</button>
+        <div style="width:1px; background:var(--border); margin:0 4px;"></div>
+        <button class="filter-chip" data-group="exp">0–2 yrs</button>
+        <button class="filter-chip" data-group="exp">3–5 yrs</button>
+        <button class="filter-chip" data-group="exp">5+ yrs</button>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="jobs-layout">
+
+      <!-- SIDEBAR FILTERS -->
+      <div class="filter-sidebar fade-in">
+        <h4 style="margin-bottom:20px;">Filters</h4>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Match Score</div>
+          <label class="filter-check-item"><input type="checkbox" checked> 90–100% (Top Match)</label>
+          <label class="filter-check-item"><input type="checkbox" checked> 75–89% (Great Fit)</label>
+          <label class="filter-check-item"><input type="checkbox"> 60–74% (Good Fit)</label>
+          <label class="filter-check-item"><input type="checkbox"> Below 60%</label>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Job Type</div>
+          <label class="filter-check-item"><input type="checkbox" checked> Full-time</label>
+          <label class="filter-check-item"><input type="checkbox"> Part-time</label>
+          <label class="filter-check-item"><input type="checkbox"> Contract</label>
+          <label class="filter-check-item"><input type="checkbox"> Internship</label>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Salary Range</div>
+          <div class="salary-range">
+            <input type="range" min="0" max="100" value="80" id="salaryRange" oninput="document.getElementById('salaryVal').textContent='₹' + (this.value * 2.5).toFixed(0) + 'L'"/>
+            <div class="salary-labels">
+              <span>₹0L</span>
+              <span id="salaryVal">₹200L</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Companies</div>
+          <label class="filter-check-item"><input type="checkbox" checked> Product Companies</label>
+          <label class="filter-check-item"><input type="checkbox"> Startups</label>
+          <label class="filter-check-item"><input type="checkbox"> MNCs</label>
+          <label class="filter-check-item"><input type="checkbox"> FAANG</label>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="filterJobs()">Apply Filters</button>
+        <button class="btn btn-secondary btn-sm" style="width:100%; justify-content:center; margin-top:8px;">Reset</button>
+      </div>
+
+      <!-- JOB LIST -->
+      <div id="jobList" style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- JOB 1 -->
+        <div class="job-card featured fade-in" data-title="Senior Full-Stack Engineer" data-company="Atlassian">
+          <div class="job-logo" style="background:rgba(10,132,255,0.12)">🏢</div>
+          <div class="job-main">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge-blue">⭐ Featured</span>
+              <span class="badge badge-green">Remote</span>
+            </div>
+            <h3>Senior Full-Stack Engineer</h3>
+            <div class="job-company">Atlassian · Bangalore / Remote · Full-time</div>
+            <div class="job-tags">
+              <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Node.js</span><span class="tag">AWS</span><span class="tag">GraphQL</span>
+            </div>
+            <div class="job-meta">
+              <span>💰 ₹40–60 LPA</span>
+              <span>📅 Posted 2 days ago</span>
+              <span>👥 150 applicants</span>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="toggleAI(this)">✨ Why this job? →</button>
+            <div class="ai-panel">
+              <div class="ai-panel-header">🤖 AI Match Analysis</div>
+              <p>Your profile is an excellent fit for this role. Here's why:</p>
+              <ul>
+                <li>Your <strong>React (92%)</strong> and <strong>TypeScript (88%)</strong> skills exceed their requirements</li>
+                <li>Your 4 years of Node.js + AWS experience directly aligns with their stack</li>
+                <li>Your open-source contributions signal the culture fit Atlassian looks for</li>
+                <li>Salary range overlaps with your target ₹45–65 LPA</li>
+              </ul>
+            </div>
+          </div>
+          <div class="job-match-col">
+            <div class="score-ring" data-score="94" data-size="100" data-stroke="7" data-color="#10d48e" data-color2="#4f8ef7" data-label="Match"></div>
+            <button class="btn btn-green btn-sm" style="width:100%;justify-content:center;">Apply Now</button>
+            <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">Save</button>
+            <div class="match-breakdown">
+              <div class="match-item">
+                <div class="match-item-label"><span>Skills</span><strong>96%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="96%" style="width:0%;background:var(--gradient-green)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Culture</span><strong>92%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="92%" style="width:0%;background:var(--gradient-cyan)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Growth</span><strong>94%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="94%" style="width:0%;background:var(--gradient-primary)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB 2 -->
+        <div class="job-card fade-in fade-in-delay-1" data-title="React Lead Developer" data-company="Razorpay">
+          <div class="job-logo" style="background:rgba(249,115,22,0.12)">🔥</div>
+          <div class="job-main">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge-orange">Hybrid</span>
+              <span class="badge badge-purple">5+ yrs</span>
+            </div>
+            <h3>React Lead Developer</h3>
+            <div class="job-company">Razorpay · Bangalore · Full-time</div>
+            <div class="job-tags">
+              <span class="tag">React</span><span class="tag">Redux</span><span class="tag">TypeScript</span><span class="tag">Jest</span><span class="tag">Webpack</span>
+            </div>
+            <div class="job-meta">
+              <span>💰 ₹35–55 LPA</span>
+              <span>📅 Posted 3 days ago</span>
+              <span>👥 87 applicants</span>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="toggleAI(this)">✨ Why this job? →</button>
+            <div class="ai-panel">
+              <div class="ai-panel-header">🤖 AI Match Analysis</div>
+              <p>Strong match based on your frontend expertise:</p>
+              <ul>
+                <li>Your React portfolio projects directly match what Razorpay's payments team needs</li>
+                <li>Redux and TypeScript skills exceed their minimum requirements</li>
+                <li>Minor gap: Razorpay prefers Webpack expertise — 2-week upskill recommended</li>
+              </ul>
+            </div>
+          </div>
+          <div class="job-match-col">
+            <div class="score-ring" data-score="91" data-size="100" data-stroke="7" data-color="#4f8ef7" data-color2="#8b5cf6" data-label="Match"></div>
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Apply Now</button>
+            <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">Save</button>
+            <div class="match-breakdown">
+              <div class="match-item">
+                <div class="match-item-label"><span>Skills</span><strong>94%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="94%" style="width:0%;background:var(--gradient-primary)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Culture</span><strong>88%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="88%" style="width:0%;background:var(--gradient-cyan)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Growth</span><strong>91%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="91%" style="width:0%;background:var(--gradient-green)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB 3 -->
+        <div class="job-card fade-in fade-in-delay-2" data-title="Staff Engineer Platform" data-company="Swiggy">
+          <div class="job-logo" style="background:rgba(252,129,15,0.12)">🍔</div>
+          <div class="job-main">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge-cyan">Hybrid</span>
+            </div>
+            <h3>Staff Engineer, Platform</h3>
+            <div class="job-company">Swiggy · Bangalore · Full-time</div>
+            <div class="job-tags">
+              <span class="tag">Node.js</span><span class="tag">Microservices</span><span class="tag">Kafka</span><span class="tag">AWS</span><span class="tag">Go</span>
+            </div>
+            <div class="job-meta">
+              <span>💰 ₹50–80 LPA</span>
+              <span>📅 Posted 1 week ago</span>
+              <span>👥 234 applicants</span>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="toggleAI(this)">✨ Why this job? →</button>
+            <div class="ai-panel">
+              <div class="ai-panel-header">🤖 AI Match Analysis</div>
+              <p>High potential but some critical gaps to address:</p>
+              <ul>
+                <li>Your Node.js and AWS skills are strong matches for this platform role</li>
+                <li>Gap identified: Go language experience required — Projobbers recommends a 4-week Go learning path</li>
+                <li>Kafka/event streaming: basic experience visible from GitHub — suggest verification challenge</li>
+              </ul>
+            </div>
+          </div>
+          <div class="job-match-col">
+            <div class="score-ring" data-score="88" data-size="100" data-stroke="7" data-color="#8b5cf6" data-color2="#ec4899" data-label="Match"></div>
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Apply Now</button>
+            <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">Save</button>
+            <div class="match-breakdown">
+              <div class="match-item">
+                <div class="match-item-label"><span>Skills</span><strong>82%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="82%" style="width:0%;background:var(--gradient-warm)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Culture</span><strong>94%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="94%" style="width:0%;background:var(--gradient-green)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Growth</span><strong>88%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="88%" style="width:0%;background:var(--gradient-primary)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB 4 -->
+        <div class="job-card fade-in fade-in-delay-3" data-title="Software Engineer III" data-company="Google">
+          <div class="job-logo" style="background:rgba(16,212,142,0.12)">🌐</div>
+          <div class="job-main">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge-purple">On-site</span>
+              <span class="badge badge-blue">FAANG</span>
+            </div>
+            <h3>Software Engineer III</h3>
+            <div class="job-company">Google · Hyderabad · Full-time</div>
+            <div class="job-tags">
+              <span class="tag">Java</span><span class="tag">Python</span><span class="tag">Distributed Systems</span><span class="tag">LeetCode</span>
+            </div>
+            <div class="job-meta">
+              <span>💰 ₹60–1.2 Cr PA</span>
+              <span>📅 Posted 4 days ago</span>
+              <span>👥 1,847 applicants</span>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="toggleAI(this)">✨ Why this job? →</button>
+            <div class="ai-panel">
+              <div class="ai-panel-header">🤖 AI Match Analysis</div>
+              <p>Ambitious but achievable with targeted preparation:</p>
+              <ul>
+                <li>Your Python skills align, but Google prefers Java/C++ at this level</li>
+                <li>System design fundamentals are progressing — complete your current roadmap step first</li>
+                <li>AI recommends: 3 months of structured DSA prep + 2 mock interviews with a mentor</li>
+              </ul>
+            </div>
+          </div>
+          <div class="job-match-col">
+            <div class="score-ring" data-score="85" data-size="100" data-stroke="7" data-color="#06d6d6" data-color2="#4f8ef7" data-label="Match"></div>
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Apply Now</button>
+            <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;">Save</button>
+            <div class="match-breakdown">
+              <div class="match-item">
+                <div class="match-item-label"><span>Skills</span><strong>78%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="78%" style="width:0%;background:var(--gradient-cyan)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Culture</span><strong>90%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="90%" style="width:0%;background:var(--gradient-primary)"></div></div>
+              </div>
+              <div class="match-item">
+                <div class="match-item-label"><span>Growth</span><strong>87%</strong></div>
+                <div class="progress-bar-wrap" style="height:5px;"><div class="progress-bar" data-width="87%" style="width:0%;background:var(--gradient-green)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /#jobList -->
+    </div><!-- /.jobs-layout -->
+  </main>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script>
+  function toggleAI(btn) {
+    const panel = btn.nextElementSibling;
+    panel.classList.toggle('open');
+    btn.textContent = panel.classList.contains('open') ? '✨ Hide Analysis ↑' : '✨ Why this job? →';
+  }
+
+  function filterJobs() {
+    const query = document.getElementById('jobSearch').value.toLowerCase();
+    document.querySelectorAll('.job-card').forEach(card => {
+      const title = (card.dataset.title || '').toLowerCase();
+      const company = (card.dataset.company || '').toLowerCase();
+      card.style.display = (title.includes(query) || company.includes(query) || !query) ? '' : 'none';
+    });
+  }
+</script>
+  <script src="chat.js"></script>
+</body>
+</html>

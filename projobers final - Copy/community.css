@@ -1,0 +1,174 @@
+/* community.css - Aesthetics for Interview Experience Sharing Hub */
+
+.community-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+@media (max-width: 1200px) {
+    .community-grid {
+        grid-template-columns: 1fr 320px;
+    }
+    .community-sidebar-left {
+        display: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .community-grid {
+        grid-template-columns: 1fr;
+    }
+    .community-sidebar-right {
+        display: none;
+    }
+}
+
+/* Feed Section */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.experience-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: var(--transition);
+    position: relative;
+}
+
+.experience-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.user-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.company-badge {
+    padding: 4px 12px;
+    background: rgba(79, 142, 247, 0.1);
+    color: var(--accent-blue);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.experience-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.experience-details {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.experience-details span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.experience-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+/* Video Integration */
+.video-embed-container {
+    margin-top: 16px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+
+/* Interaction Bar */
+.interaction-bar {
+    display: flex;
+    gap: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}
+
+.interaction-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.interaction-btn:hover {
+    color: var(--text-primary);
+}
+
+.interaction-btn.liked {
+    color: var(--accent-red);
+}
+
+/* Question Bank Widget */
+.question-bank-card {
+    position: sticky;
+    top: 24px;
+}
+
+.qbank-item {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.qbank-item:last-child {
+    border-bottom: none;
+}
+
+.qbank-item .q-text {
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.qbank-item .q-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Modal specific */
+.share-modal-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+@media (max-width: 600px) {
+    .share-modal-content {
+        grid-template-columns: 1fr;
+    }
+}

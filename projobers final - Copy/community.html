@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interview Hub — Projobbers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="community.css"/>
+  <link rel="stylesheet" href="social-feed.css"/>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item active">
+      <span class="nav-icon">💬</span> Community
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Interview Experience Hub</span></div>
+      <h2>Interview <span class="gradient-text">Experience Hub</span></h2>
+      <p>Learn from real interview stories shared by the Projobbers community.</p>
+    </div>
+
+    <div class="community-grid fade-in">
+      
+      <!-- LEFT SIDEBAR: Filters -->
+      <aside class="community-sidebar-left">
+        <div class="card" style="padding: 20px;">
+          <h3 style="margin-bottom: 16px; font-size: 1rem;">🔍 Filter Experiences</h3>
+          
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>Search Company</label>
+            <input type="text" id="companySearch" class="form-control" style="width: 100%;" placeholder="e.g. Google, Amazon">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label>Role</label>
+            <select id="roleFilter" class="form-control" style="width: 100%;">
+              <option value="all">All Roles</option>
+              <option value="frontend">Frontend Developer</option>
+              <option value="backend">Backend Developer</option>
+              <option value="fullstack">Full-Stack Developer</option>
+              <option value="sde">SDE</option>
+              <option value="datascience">Data Science</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label>Difficulty</label>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+               <label style="font-size:0.85rem;"><input type="checkbox" value="easy"> Easy</label>
+               <label style="font-size:0.85rem;"><input type="checkbox" value="medium"> Medium</label>
+               <label style="font-size:0.85rem;"><input type="checkbox" value="hard"> Hard</label>
+            </div>
+          </div>
+
+          <button class="btn btn-outline btn-sm" style="width:100%;">Reset Filters</button>
+        </div>
+      </aside>
+
+      <!-- CENTER: Feed -->
+      <section class="community-feed">
+        <div class="feed-header">
+          <h3 id="feedTitle">Recent Experiences</h3>
+          <button class="btn btn-primary" onclick="openShareModal()">+ Share My Experience</button>
+        </div>
+
+        <div id="experienceFeed">
+          <!-- Experiences will be injected here -->
+        </div>
+      </section>
+
+      <!-- RIGHT SIDEBAR: Question Bank & Trending -->
+      <aside class="community-sidebar-right">
+        <div class="card question-bank-card">
+          <h3 style="margin-bottom: 16px; font-size: 1rem;">💎 Question Bank</h3>
+          <div id="questionBankList">
+            <!-- Questions will be injected here -->
+          </div>
+          <button class="btn btn-outline btn-sm" style="width:100%; margin-top:16px;">View Full Bank</button>
+        </div>
+
+        <div class="card fade-in" style="margin-top:20px; padding:20px; background:linear-gradient(135deg, rgba(139,92,246,0.1), transparent);">
+          <h3 style="margin-bottom: 12px; font-size: 1rem;">🔥 Trending Companies</h3>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span class="tag">Google (42)</span>
+            <span class="tag">Atlassian (28)</span>
+            <span class="tag">Microsoft (19)</span>
+            <span class="tag">Razorpay (15)</span>
+            <span class="tag">Swiggy (12)</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+</div>
+
+<!-- SHARE EXPERIENCE MODAL -->
+<div class="quiz-overlay" id="shareModal">
+  <div class="quiz-container" style="max-width: 700px; text-align:left;">
+    <div style="background:var(--bg-card); padding:32px; border-radius:var(--radius-lg); border:1px solid var(--border);">
+      <h2 style="margin-bottom:8px;">Share Your Interview Story</h2>
+      <p style="color:var(--text-muted); margin-bottom:24px; font-size:0.9rem;">Help your peers by sharing your real interview rounds and questions.</p>
+      
+      <div class="share-modal-content">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="postCompany" class="form-control" style="width:100%;" placeholder="e.g. Google">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <input type="text" id="postRole" class="form-control" style="width:100%;" placeholder="e.g. SDE-1">
+        </div>
+        <div class="form-group">
+          <label>Difficulty</label>
+          <select id="postDifficulty" class="form-control" style="width:100%;">
+            <option value="Easy">Easy</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Rounds Count</label>
+          <input type="number" id="postRounds" class="form-control" style="width:100%;" value="3">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label>List some Questions (Comma separated)</label>
+        <textarea id="postQuestions" class="form-control" style="width:100%; height:80px; padding:12px;" placeholder="e.g. Invert a Binary Tree, Why should we hire you?, System Design for Uber"></textarea>
+      </div>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label>Tell us your experience / Tips</label>
+        <textarea id="postExperience" class="form-control" style="width:100%; height:100px; padding:12px;" placeholder="Describe the environment, technical depth, etc."></textarea>
+      </div>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label>YouTube Video Link (Optional)</label>
+        <input type="url" id="postVideo" class="form-control" style="width:100%;" placeholder="https://youtube.com/watch?v=...">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:32px;">
+        <button class="btn btn-outline" onclick="closeShareModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitExperience()" style="background:var(--gradient-primary);">Publish Experience</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="community.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>

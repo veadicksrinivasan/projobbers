@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart AI Learning Roadmap — Projobbers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="course.css"/>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1" style="background:var(--accent-purple)"></div>
+<div class="bg-glow bg-glow-2" style="background:var(--accent-cyan)"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR (Reused) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    
+    <!-- === Setup View === -->
+    <div id="view-setup" class="fade-in setup-container">
+      <div class="setup-card">
+        <h2 style="font-size: 2.2rem; margin-bottom: 12px;">Generate Your <span class="gradient-text">Learning Roadmap</span></h2>
+        <p style="color:var(--text-secondary); margin-bottom: 32px;">Select your desired course and current skill level. AI will generate a personalized, modular learning path for you.</p>
+        
+        <div class="form-group">
+          <label for="courseSelect">What do you want to learn?</label>
+          <select id="courseSelect" class="form-control">
+            <option value="HTML & CSS Basics">HTML & CSS Basics</option>
+            <option value="Python Development">Python Development</option>
+            <option value="React Frontend">React Frontend</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+            <option value="Full-Stack Web Development">Full-Stack Web Development</option>
+            <option value="Data Science & ML">Data Science & Machine Learning</option>
+            <option value="Cybersecurity">Cybersecurity</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="levelSelect">Current Skill Level</label>
+          <select id="levelSelect" class="form-control">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+
+        <button id="btnGenerate" class="btn btn-primary btn-lg" style="width: 100%; justify-content:center; margin-top:16px; font-size:1.1rem; background:var(--gradient-purple);">Generate Smart Roadmap ✨</button>
+      </div>
+    </div>
+
+    <!-- === Roadmap View === -->
+    <div id="view-roadmap" class="fade-in coding-view-hidden">
+      <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+          <div class="breadcrumb"><a href="dashboard.html">Dashboard</a> / <span class="current">AI Roadmap</span></div>
+          <h2><span id="roadmapTitle" class="gradient-text">AI Course</span> Roadmap</h2>
+          <p>Level: <span id="roadmapLevel" class="badge badge-purple">Beginner</span></p>
+        </div>
+        <button id="btnReset" class="btn btn-outline btn-sm">Start Over</button>
+      </div>
+
+      <div class="card p-0" style="padding:40px;">
+        <div class="roadmap-container active" id="roadmapContainer">
+          <!-- Dynamic nodes injected via JS -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ===================== -->
+<!-- QUIZ SYSTEM OVERLAY   -->
+<!-- ===================== -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+      <h2>Module Quiz: <span id="quizTitle" class="gradient-text-cyan">Intro</span></h2>
+      <button class="btn btn-outline btn-sm" id="btnCloseQuiz">Cancel</button>
+    </div>
+
+    <div id="quizForm">
+      <div style="margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+        <h3 style="margin-bottom:8px; display:flex; gap:10px;"><span style="color:var(--accent-blue)">Part 1:</span> Multiple Choice</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Select the correct answer for each foundation concept.</p>
+      </div>
+      
+      <div id="mcqContainer">
+        <!-- 5 MCQs populated here -->
+      </div>
+
+      <div style="margin-top:40px; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+        <h3 style="margin-bottom:8px; display:flex; gap:10px;"><span style="color:var(--accent-purple)">Part 2:</span> Descriptive Answers</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Type your answers. The AI Assessor will evaluate your understanding.</p>
+      </div>
+
+      <div id="descContainer">
+        <!-- 5 Descriptive Questions populated here -->
+      </div>
+
+      <div style="margin-top: 40px; display:flex; justify-content:flex-end;">
+        <button id="btnSubmitQuiz" class="btn btn-primary btn-lg" style="background:var(--gradient-cyan);">Submit for AI Evaluation</button>
+      </div>
+    </div>
+
+    <!-- AI Evaluation Result -->
+    <div class="quiz-result" id="quizResult">
+      <div style="font-size:3rem; margin-bottom:12px;" id="resultEmoji">🎉</div>
+      <h2 style="font-size:2rem; margin-bottom:8px;">AI Evaluation Score: <span id="quizScore">8</span>/10</h2>
+      <p id="quizFeedback" style="color:var(--text-secondary); max-width:600px; margin:0 auto 24px; line-height:1.6;"></p>
+      
+      <div style="display:flex; justify-content:center; gap:16px;">
+        <button id="btnRewatch" class="btn btn-outline" style="border-color:var(--accent-orange); color:var(--accent-orange); display:none;">🔁 Rewatch Videos</button>
+        <button id="btnContinueRoadmap" class="btn btn-primary">Continue Roadmap →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="course.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>

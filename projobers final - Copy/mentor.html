@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mentor Hub — Projobbers</title>
+  <meta name="description" content="Connect with expert mentors matched by AI based on your goals, skills, and learning style."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    .mentor-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      transition: var(--transition);
+      position: relative;
+    }
+    .mentor-card:hover { border-color: var(--border-accent); transform: translateY(-4px); box-shadow: var(--shadow-card); }
+
+    .mentor-header { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+    .mentor-avatar {
+      width: 68px; height: 68px;
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; font-weight: 800; color: white; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    .mentor-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 3px; }
+    .mentor-title { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .mentor-company { font-size: 0.8rem; color: var(--text-muted); }
+
+    .match-badge-hero {
+      margin-left: auto;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .mentor-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+
+    .mentor-stats { display: flex; gap: 16px; margin: 12px 0; font-size: 0.78rem; }
+    .mentor-stat span:first-child { color: var(--text-muted); }
+    .mentor-stat strong { color: var(--text-primary); }
+
+    .mentor-bio { font-size: 0.84rem; line-height: 1.65; margin-bottom: 16px; }
+
+    .mentor-actions { display: flex; gap: 8px; }
+
+    .ai-match-reason {
+      background: linear-gradient(135deg, rgba(79,142,247,0.06), rgba(139,92,246,0.04));
+      border: 1px solid rgba(79,142,247,0.15);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+
+    .rating { color: #fbbf24; font-size: 0.85rem; letter-spacing: 1px; }
+
+    /* Selection Styles */
+    .challenge-option {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+    .challenge-option:hover {
+      border-color: var(--accent-blue);
+      background: rgba(79, 142, 247, 0.05);
+    }
+    .challenge-option.selected {
+      background: rgba(79, 142, 247, 0.15);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--accent-blue);
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<button class="hamburger" id="hamburger">☰</button>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn">💬</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Mentor Hub</span></div>
+      <h2>🤝 AI <span class="gradient-text">Mentor Matching</span></h2>
+      <p>Mentors ranked by AI compatibility — matched on your goals, skills, and learning style.</p>
+    </div>
+
+    <!-- Stats Banner -->
+    <div class="grid-3 fade-in" style="margin-bottom:24px;">
+      <div class="card card-sm" style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.8rem;">🤝</span>
+        <div><div style="font-size:1.5rem;font-weight:800;color:var(--accent-blue)"><span data-counter="3200">0</span>+</div><div style="font-size:0.78rem;color:var(--text-muted)">Expert Mentors</div></div>
+      </div>
+      <div class="card card-sm" style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.8rem;">⭐</span>
+        <div><div style="font-size:1.5rem;font-weight:800;color:var(--accent-green)">4.9</div><div style="font-size:0.78rem;color:var(--text-muted)">Avg Rating</div></div>
+      </div>
+      <div class="card card-sm" style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:1.8rem;">🎯</span>
+        <div><div style="font-size:1.5rem;font-weight:800;color:var(--accent-purple)">94%</div><div style="font-size:0.78rem;color:var(--text-muted)">Satisfaction Rate</div></div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card" style="margin-bottom:20px;padding:14px 16px;">
+      <div class="filter-row">
+        <button class="filter-chip active" data-group="spec">All Specialties</button>
+        <button class="filter-chip" data-group="spec">System Design</button>
+        <button class="filter-chip" data-group="spec">Frontend</button>
+        <button class="filter-chip" data-group="spec">Backend</button>
+        <button class="filter-chip" data-group="spec">ML/AI</button>
+        <button class="filter-chip" data-group="spec">Career Growth</button>
+        <button class="filter-chip" data-group="spec">Startups</button>
+        <div style="margin-left:auto;">
+          <select class="filter-select">
+            <option>Best Match</option>
+            <option>Highest Rated</option>
+            <option>Available Now</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mentor Cards Grid -->
+    <div class="grid-2">
+      <!-- Mentor 1 -->
+      <div class="mentor-card fade-in">
+        <div class="mentor-header">
+          <div class="mentor-avatar" style="background:var(--gradient-primary)">HS</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Hariharasudan</div>
+            <div class="mentor-title">Staff Software Engineer</div>
+            <div class="mentor-company">Google · Hyderabad · 9 yrs exp</div>
+            <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+              <div class="rating">★★★★★</div>
+              <span style="font-size:0.75rem;color:var(--text-muted)">4.9 (128 reviews)</span>
+              <span class="availability-dot" style="color:var(--accent-green)">Available</span>
+            </div>
+          </div>
+          <div class="match-badge-hero">
+            <div class="score-ring" data-score="97" data-size="72" data-stroke="6" data-color="#10d48e" data-color2="#4f8ef7" data-label="Match"></div>
+          </div>
+        </div>
+        <div class="ai-match-reason">
+          <span>🤖</span>
+          <span><strong>AI Match:</strong> Hariharasudan's system design mastery directly fills your roadmap gap. Both of you focus on scalable React + Node.js architectures at similar career stages.</span>
+        </div>
+        <div class="mentor-tags">
+          <span class="tag">System Design</span><span class="tag">React</span><span class="tag">Distributed Systems</span><span class="tag">FAANG Prep</span>
+        </div>
+        <div class="mentor-stats">
+          <div class="mentor-stat"><span>Sessions: </span><strong>342</strong></div>
+          <div class="mentor-stat"><span>Rate: </span><strong>₹2,500/hr</strong></div>
+          <div class="mentor-stat"><span>Response: </span><strong>&lt; 1hr</strong></div>
+        </div>
+        <div class="mentor-actions">
+          <button class="btn btn-primary" onclick="openBookingModal('Hariharasudan')" style="flex:1;justify-content:center;">📅 Schedule Session</button>
+          <button class="btn btn-secondary btn-sm">View Profile</button>
+          <button class="btn btn-secondary btn-sm">💬 Message</button>
+        </div>
+      </div>
+
+      <!-- Mentor 2 -->
+      <div class="mentor-card fade-in fade-in-delay-1">
+        <div class="mentor-header">
+          <div class="mentor-avatar" style="background:var(--gradient-green)">GP</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Guruprasath</div>
+            <div class="mentor-title">Principal Engineer</div>
+            <div class="mentor-company">Atlassian · Remote · 11 yrs exp</div>
+            <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+              <div class="rating">★★★★★</div>
+              <span style="font-size:0.75rem;color:var(--text-muted)">4.8 (96 reviews)</span>
+              <span class="availability-dot" style="color:var(--accent-green)">Available</span>
+            </div>
+          </div>
+          <div class="match-badge-hero">
+            <div class="score-ring" data-score="93" data-size="72" data-stroke="6" data-color="#4f8ef7" data-color2="#8b5cf6" data-label="Match"></div>
+          </div>
+        </div>
+        <div class="ai-match-reason">
+          <span>🤖</span>
+          <span><strong>AI Match:</strong> Guruprasath is a TypeScript & React expert at Atlassian — exactly the stack and company culture you're targeting for your next role.</span>
+        </div>
+        <div class="mentor-tags">
+          <span class="tag">TypeScript</span><span class="tag">React</span><span class="tag">Architecture</span><span class="tag">Atlassian Stack</span>
+        </div>
+        <div class="mentor-stats">
+          <div class="mentor-stat"><span>Sessions: </span><strong>218</strong></div>
+          <div class="mentor-stat"><span>Rate: </span><strong>₹2,200/hr</strong></div>
+          <div class="mentor-stat"><span>Response: </span><strong>&lt; 2hr</strong></div>
+        </div>
+        <div class="mentor-actions">
+          <button class="btn btn-primary" onclick="openBookingModal('Guruprasath')" style="flex:1;justify-content:center;">📅 Schedule Session</button>
+          <button class="btn btn-secondary btn-sm">View Profile</button>
+          <button class="btn btn-secondary btn-sm">💬 Message</button>
+        </div>
+      </div>
+
+      <!-- Mentor 3 -->
+      <div class="mentor-card fade-in">
+        <div class="mentor-header">
+          <div class="mentor-avatar" style="background:var(--gradient-warm)">VK</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Veadick</div>
+            <div class="mentor-title">Engineering Manager</div>
+            <div class="mentor-company">Flipkart · Bangalore · 13 yrs exp</div>
+            <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+              <div class="rating">★★★★★</div>
+              <span style="font-size:0.75rem;color:var(--text-muted)">4.9 (204 reviews)</span>
+              <span class="availability-dot busy" style="color:var(--accent-orange)">Busy this week</span>
+            </div>
+          </div>
+          <div class="match-badge-hero">
+            <div class="score-ring" data-score="89" data-size="72" data-stroke="6" data-color="#f97316" data-color2="#ec4899" data-label="Match"></div>
+          </div>
+        </div>
+        <div class="ai-match-reason">
+          <span>🤖</span>
+          <span><strong>AI Match:</strong> Veadick specializes in career growth for senior devs transitioning to leadership — ideal for your Staff Engineer goal track.</span>
+        </div>
+        <div class="mentor-tags">
+          <span class="tag">Career Roadmap</span><span class="tag">Leadership</span><span class="tag">Backend</span><span class="tag">AWS</span>
+        </div>
+        <div class="mentor-stats">
+          <div class="mentor-stat"><span>Sessions: </span><strong>467</strong></div>
+          <div class="mentor-stat"><span>Rate: </span><strong>₹3,000/hr</strong></div>
+          <div class="mentor-stat"><span>Response: </span><strong>&lt; 4hr</strong></div>
+        </div>
+        <p class="mentor-bio">"I help engineers transition from IC to leadership roles. Specializing in performance reviews, promotions, and building engineering influence."</p>
+        <div class="mentor-actions">
+          <button class="btn btn-warm" onclick="openBookingModal('Veadick')" style="flex:1;justify-content:center;">📅 Schedule Session</button>
+          <button class="btn btn-secondary btn-sm">View Profile</button>
+          <button class="btn btn-secondary btn-sm">💬 Message</button>
+        </div>
+      </div>
+
+      <!-- Mentor 4 -->
+      <div class="mentor-card fade-in fade-in-delay-1">
+        <div class="mentor-header">
+          <div class="mentor-avatar" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">AM</div>
+          <div style="flex:1;">
+            <div class="mentor-name">Aditya Menon</div>
+            <div class="mentor-title">Senior MLE</div>
+            <div class="mentor-company">Microsoft · Hyderabad · 7 yrs exp</div>
+            <div style="display:flex;gap:8px;margin-top:6px;align-items:center;">
+              <div class="rating">★★★★☆</div>
+              <span style="font-size:0.75rem;color:var(--text-muted)">4.7 (72 reviews)</span>
+              <span class="availability-dot" style="color:var(--accent-green)">Available</span>
+            </div>
+          </div>
+          <div class="match-badge-hero">
+            <div class="score-ring" data-score="84" data-size="72" data-stroke="6" data-color="#8b5cf6" data-color2="#06d6d6" data-label="Match"></div>
+          </div>
+        </div>
+        <div class="ai-match-reason">
+          <span>🤖</span>
+          <span><strong>AI Match:</strong> If you want to pivot into AI/ML integrated backend systems, Aditya bridges your current Python skills with production ML deployment.</span>
+        </div>
+        <div class="mentor-tags">
+          <span class="tag">ML Engineering</span><span class="tag">Python</span><span class="tag">Azure</span><span class="tag">LLMs</span>
+        </div>
+        <div class="mentor-stats">
+          <div class="mentor-stat"><span>Sessions: </span><strong>156</strong></div>
+          <div class="mentor-stat"><span>Rate: </span><strong>₹2,800/hr</strong></div>
+          <div class="mentor-stat"><span>Response: </span><strong>&lt; 3hr</strong></div>
+        </div>
+        <div class="mentor-actions">
+          <button class="btn btn-primary" onclick="openBookingModal('Aditya Menon')" style="flex:1;justify-content:center;">📅 Schedule Session</button>
+          <button class="btn btn-secondary btn-sm">View Profile</button>
+          <button class="btn btn-secondary btn-sm">💬 Message</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h3>📅 Schedule a Session</h3>
+      <button class="modal-close" onclick="Projobbers.closeModal('bookingModal')">✕</button>
+    </div>
+    <div id="bookingStep1">
+      <p style="margin-bottom:20px; font-size:0.88rem;">Choose a time that works for you. The mentor will confirm within 1 hour.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+        <div id="slot1" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot1')">
+          <strong>Tomorrow</strong><span style="color:var(--text-muted)">10:00 AM</span>
+        </div>
+        <div id="slot2" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot2')">
+          <strong>Tomorrow</strong><span style="color:var(--text-muted)">3:00 PM</span>
+        </div>
+        <div id="slot3" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot3')">
+          <strong>Fri Mar 20</strong><span style="color:var(--text-muted)">11:00 AM</span>
+        </div>
+        <div id="slot4" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot4')">
+          <strong>Fri Mar 20</strong><span style="color:var(--text-muted)">4:00 PM</span>
+        </div>
+        <div id="slot5" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot5')">
+          <strong>Sat Mar 21</strong><span style="color:var(--text-muted)">9:00 AM</span>
+        </div>
+        <div id="slot6" class="challenge-option" style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:0.78rem;" onclick="selectSlot('slot6')">
+          <strong>Sat Mar 21</strong><span style="color:var(--text-muted)">2:00 PM</span>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:0.8rem;color:var(--text-secondary);display:block;margin-bottom:6px;">Session goals (optional)</label>
+        <textarea style="width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;color:var(--text-primary);font-family:inherit;font-size:0.85rem;resize:none;outline:none;" rows="3" placeholder="System design interview prep, code review, career roadmap discussion…"></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="confirmBooking()">Confirm Booking · ₹2,500</button>
+    </div>
+    <div id="bookingStep2" style="display:none;">
+      <div style="text-align:center;padding:24px 0;">
+        <div style="font-size:3rem;margin-bottom:16px;animation:verifiedPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;">✅</div>
+        <h3 class="gradient-text" style="margin-bottom:8px;">Session Booked!</h3>
+        <p style="margin-bottom:20px;">Your session with <span id="bookedMentorName">Hariharasudan</span> is confirmed. A notification has been sent to the mentor.</p>
+        <div style="background:rgba(16,212,142,0.1);border:1px solid rgba(16,212,142,0.25);border-radius:var(--radius-md);padding:16px;font-size:0.85rem;text-align:left;margin-bottom:20px;">
+          <div style="color:var(--accent-green);font-weight:700;margin-bottom:6px;">📅 Session Details</div>
+          <div id="confirmedSlot" style="color:var(--text-secondary);"></div>
+          <div style="color:var(--text-secondary);">Duration: 60 minutes · Video Call</div>
+        </div>
+        <button id="whatsappBtn" class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:12px;display:none;background:#25D366;border-color:#25D366;" onclick="sendWhatsApp()">💬 Send WhatsApp Notification</button>
+        <button class="btn btn-green" style="width:100%;justify-content:center;" onclick="Projobbers.closeModal('bookingModal')">🎉 Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script>
+  let selectedSlot = null;
+  let currentMentor = null;
+  let currentMentorPhone = null;
+
+  function openBookingModal(mentorName) {
+    currentMentor = mentorName;
+    document.getElementById('bookedMentorName').textContent = mentorName;
+    document.getElementById('bookingStep1').style.display = 'block';
+    document.getElementById('bookingStep2').style.display = 'none';
+    document.getElementById('whatsappBtn').style.display = 'none';
+    Projobbers.openModal('bookingModal');
+  }
+
+  function selectSlot(id) {
+    document.querySelectorAll('#bookingStep1 .challenge-option').forEach(s => s.classList.remove('selected'));
+    document.getElementById(id).classList.add('selected');
+    selectedSlot = id;
+  }
+
+  async function confirmBooking() {
+    if (!selectedSlot) {
+      alert("Please select a time slot first.");
+      return;
+    }
+    
+    const slots = {
+      slot1:'Tomorrow, 10:00 AM',slot2:'Tomorrow, 3:00 PM',
+      slot3:'Fri Mar 20, 11:00 AM',slot4:'Fri Mar 20, 4:00 PM',
+      slot5:'Sat Mar 21, 9:00 AM',slot6:'Sat Mar 21, 2:00 PM'
+    };
+    const timeTxt = slots[selectedSlot];
+    const goals = document.querySelector('#bookingStep1 textarea').value;
+
+    try {
+      const result = await window.API.scheduleSession({
+        mentor_name: currentMentor,
+        time_slot: timeTxt,
+        goals: goals
+      });
+      
+      console.log("Booking response:", result);
+
+      if (result.status === "success") {
+        currentMentorPhone = result.phone;
+        document.getElementById('confirmedSlot').textContent = '🕐 ' + timeTxt;
+        document.getElementById('bookingStep1').style.display = 'none';
+        document.getElementById('bookingStep2').style.display = 'block';
+        
+        if (currentMentorPhone) {
+          document.getElementById('whatsappBtn').style.display = 'flex';
+        }
+      } else {
+        throw new Error(result.message || "Failed to schedule session");
+      }
+    } catch (error) {
+      console.error("Error booking session:", error);
+      alert("Failed to schedule session. Please try again.");
+    }
+  }
+
+  function sendWhatsApp() {
+    if (!currentMentorPhone) return;
+    const timeTxt = document.getElementById('confirmedSlot').textContent.replace('🕐 ', '');
+    const message = `Hi ${currentMentor}, I have just scheduled a mentorship session with you for ${timeTxt}. Looking forward to it!`;
+    const url = `https://wa.me/91${currentMentorPhone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+</script>
+<script src="chat.js"></script>
+</body>
+</html>

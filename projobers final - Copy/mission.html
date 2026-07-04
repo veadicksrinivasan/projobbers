@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Missions — Projobbers</title>
+  <meta name="description" content="Complete skill-based missions, record your progress, and get AI evaluation."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="mission.css"/>
+  <link rel="stylesheet" href="chat.css"/>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;">
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item" id="nav-dashboard.html">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="mission.html" class="nav-item active" id="nav-mission.html">
+      <span class="nav-icon">🎯</span> Missions
+      <span class="nav-badge" style="background:var(--gradient-cyan)">New</span>
+    </a>
+    <a href="jobs.html" class="nav-item" id="nav-jobs.html">
+      <span class="nav-icon">👔</span> Job Matcher
+    </a>
+    <a href="interview.html" class="nav-item" id="nav-interview.html">
+      <span class="nav-icon">🤖</span> AI Interview
+    </a>
+    <a href="coding.html" class="nav-item" id="nav-coding.html">
+      <span class="nav-icon">💻</span> Coding Tests
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="skills.html" class="nav-item" id="nav-skills.html">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="mentor.html" class="nav-item" id="nav-mentor.html">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="analytics.html" class="nav-item" id="nav-analytics.html">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item" id="nav-community.html">
+      <span class="nav-icon">💬</span> Community
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+         <div class="user-avatar-sm" id="sidebarAvatar">AK</div>
+         <div class="user-info-sm">
+            <div class="user-name" id="sidebarName">Arjun Kumar</div>
+            <div class="user-role" id="sidebarRole">Full-Stack Dev</div>
+         </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn" data-tooltip="Notifications">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn" data-tooltip="Messages">💬</button>
+        <button class="icon-btn" data-tooltip="Help">❓</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Missions</span></div>
+      <h2>Skill <span class="gradient-text">Missions 🎯</span></h2>
+      <p>Select your tech stack and difficulty to generate a real-world project mission. Record your work and submit it for an AI-powered evaluation!</p>
+    </div>
+
+    <!-- CONFIGURATION SECTION -->
+    <div class="card fade-in" id="config-section" style="margin-bottom: 24px;">
+      <h3 style="margin-bottom: 16px;">1. Configure Your Mission</h3>
+      
+      <div class="config-grid">
+        <!-- Role Selection -->
+        <div class="config-group">
+          <label class="config-label">Select Technology Role</label>
+          <div class="role-grid" id="roleGrid">
+            <div class="selection-card" data-role="HTML/CSS">
+              <div class="sc-icon">🌐</div>
+              <div class="sc-title">HTML/CSS</div>
+            </div>
+            <div class="selection-card" data-role="React">
+              <div class="sc-icon">⚛️</div>
+              <div class="sc-title">React</div>
+            </div>
+            <div class="selection-card" data-role="Python">
+              <div class="sc-icon">🐍</div>
+              <div class="sc-title">Python</div>
+            </div>
+            <div class="selection-card" data-role="Java">
+              <div class="sc-icon">☕</div>
+              <div class="sc-title">Java</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div class="config-group" style="opacity: 0.5; pointer-events: none;" id="difficultyWrapper">
+          <label class="config-label">Select Difficulty</label>
+          <div class="difficulty-grid" id="difficultyGrid">
+            <div class="selection-card" data-diff="Easy">
+              <div class="sc-icon" style="color: var(--accent-green)">🟢</div>
+              <div class="sc-title">Easy</div>
+              <div class="sc-sub">Beginner friendly</div>
+            </div>
+            <div class="selection-card" data-diff="Medium">
+              <div class="sc-icon" style="color: var(--accent-orange)">🟡</div>
+              <div class="sc-title">Medium</div>
+              <div class="sc-sub">Intermediate</div>
+            </div>
+            <div class="selection-card" data-diff="Hard">
+              <div class="sc-icon" style="color: var(--accent-red)">🔴</div>
+              <div class="sc-title">Hard</div>
+              <div class="sc-sub">Advanced level</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn btn-primary" id="btnGenerateMissions" disabled style="background: var(--gradient-purple);">Generate Missions →</button>
+      </div>
+    </div>
+
+    <!-- MISSION SELECTION SECTION (Shows 10 projects) -->
+    <div class="card fade-in hidden" id="mission-list-section" style="margin-bottom: 24px;">
+      <h3 style="margin-bottom: 16px;">2. Pick a Mission <span id="missionListCounts"></span></h3>
+      <div class="mission-list-grid" id="missionListGrid">
+        <!-- Missions generated dynamically here -->
+      </div>
+    </div>
+
+    <!-- ACTIVE MISSION SECTION -->
+    <div class="card fade-in hidden" id="active-mission-section" style="margin-bottom: 24px; border-color: rgba(79,142,247,0.4); box-shadow: 0 0 20px rgba(79,142,247,0.1);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+        <div>
+          <h2 id="am-title" style="margin-bottom: 8px; font-size: 1.6rem; font-weight: 800; color: var(--accent-blue);">Mission Title</h2>
+          <div class="profile-tags">
+            <span class="tag" id="am-role-tag">Role</span>
+            <span class="tag" id="am-diff-tag">Difficulty</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnSelectAnother">Go Back</button>
+      </div>
+      
+      <p id="am-desc" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px;"></p>
+      
+      <div class="mission-details-grid">
+        <div class="md-box">
+          <h4>📌 Objectives</h4>
+          <ul id="am-objectives" class="custom-list"></ul>
+        </div>
+        <div class="md-box">
+          <h4>💡 Pro Tips</h4>
+          <ul id="am-tips" class="custom-list"></ul>
+        </div>
+      </div>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin: 32px 0;">
+
+      <h3 style="margin-bottom: 16px;">3. Proof of Work & Submission</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Record your screen while coding to prove your work, or upload a code archive (ZIP) / video proof. The AI will evaluate your submission.</p>
+      
+      <div class="proof-actions" style="display:flex; gap: 16px; margin-bottom: 32px;">
+        <button class="btn btn-primary" id="btnStartRecord" style="background: var(--gradient-red);"><span class="icon">⏺</span> Start Screen Record</button>
+        <button class="btn btn-secondary" id="btnStopRecord" style="display:none;"><span class="icon">⏹</span> Stop Recording</button>
+        
+        <label class="btn btn-outline" style="cursor: pointer;">
+          <input type="file" id="fileUpload" style="display: none;" accept=".zip,.mp4,.webm">
+          <span class="icon">📎</span> Upload File
+        </label>
+      </div>
+
+      <!-- Preview of recording or file -->
+      <div id="proofPreview" class="proof-preview hidden">
+        <div class="preview-header">Attached Proof</div>
+        <video id="videoPreview" controls class="hidden"></video>
+        <div id="filePreview" class="hidden">
+           <span style="font-size:2rem;">📁</span>
+           <div id="fileName" style="margin-top:8px;">filename.zip</div>
+        </div>
+      </div>
+
+      <div style="text-align: right; margin-top: 24px;">
+        <button class="btn btn-primary btn-lg" id="btnSubmitMission" style="background: var(--gradient-green); width: 100%; justify-content: center; font-size: 1.1rem; padding: 16px;">🚀 Submit Mission for Evaluation</button>
+      </div>
+    </div>
+
+    <!-- EVALUATION RESULTS -->
+    <div class="card fade-in hidden" id="results-section" style="margin-bottom: 24px; text-align: center; padding: 40px 20px;">
+      <h2 style="font-size: 2rem; margin-bottom: 12px;">Evaluation Complete <span id="resultEmoji">🎉</span></h2>
+      <div style="font-size: 4rem; font-weight: 900; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0;" id="resultScore">0/10</div>
+      
+      <div style="text-align: left; background: var(--bg-body); border-radius: var(--radius-lg); padding: 24px; border: 1px solid var(--border); margin-top: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <h4 style="margin-bottom: 12px; color: var(--accent-orange);">⚠️ Areas for Improvement</h4>
+        <ul id="resultFeedback" class="custom-list" style="margin-bottom: 0;"></ul>
+      </div>
+
+      <button class="btn btn-primary" id="btnRestartMission" style="margin-top: 32px;">Try Another Mission</button>
+    </div>
+
+  </main>
+</div>
+
+  <script src="mock-responses.js"></script>
+  <script src="api-client.js"></script>
+  <script src="app.js"></script>
+<script src="mission.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Coding Assessment — Projobbers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="coding.css"/>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR (Reused) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    
+    <!-- === LIBRARY VIEW === -->
+    <div id="view-library" class="fade-in">
+      <div class="page-header">
+        <div class="breadcrumb"><span>Home</span> / <span class="current">AI Coding Assessment</span></div>
+        <div class="library-header">
+          <div>
+            <h2><span class="gradient-text">3000+</span> Algorithm Problems</h2>
+            <p>Enhance your algorithmic thinking and prepare for top-tier technical interviews.</p>
+          </div>
+          <div>
+            <button class="btn btn-outline" style="border-color:var(--accent-purple); color:var(--accent-purple)">Daily Challenge 🎁</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search problems (e.g. Two Sum)..." />
+        
+        <select id="diffFilter" class="filter-select">
+          <option value="All">All Difficulties</option>
+          <option value="Easy">🟩 Easy</option>
+          <option value="Medium">🟧 Medium</option>
+          <option value="Hard">🟥 Hard</option>
+        </select>
+        
+        <select id="topicFilter" class="filter-select">
+          <option value="All">All Topics</option>
+          <option value="Arrays">Arrays</option>
+          <option value="Strings">Strings</option>
+          <option value="Dynamic Programming">Dynamic Programming</option>
+          <option value="Graph Theory">Graph Theory</option>
+          <option value="Tree Structures">Tree Structures</option>
+        </select>
+      </div>
+
+      <div class="questions-table-wrap">
+        <table class="questions-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">Status</th>
+              <th>Title</th>
+              <th>Difficulty</th>
+              <th>Topic</th>
+              <th>Acceptance</th>
+              <th style="text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="questionsBody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+        
+        <div class="pagination">
+          <span style="color:var(--text-muted); font-size:0.85rem;" id="pageInfo">Showing 1-20 of 3000 problems</span>
+          <div class="page-controls">
+            <button id="btnPrevPage" class="btn btn-secondary btn-sm">Prev</button>
+            <button id="btnNextPage" class="btn btn-secondary btn-sm">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === EDITOR VIEW === -->
+    <div class="coding-view-hidden fade-in" id="view-editor">
+      <div class="page-header" style="margin-bottom: 20px;">
+        <button id="btnBackToLibrary" class="btn btn-secondary btn-sm" style="margin-bottom: 16px;">← Back to Library</button>
+      </div>
+
+      <div class="editor-layout">
+        <!-- Problem Description -->
+        <div class="problem-panel">
+          <div class="problem-header">
+            <h2 class="problem-title" id="pTitle">Problem Title</h2>
+            <div class="problem-meta">
+              <span id="pDiff" class="diff-easy">EASY</span>
+              <span class="tag" id="pTopic">Arrays</span>
+            </div>
+          </div>
+          <div class="problem-desc" id="pDesc">
+            <p>Problem description goes here...</p>
+            <pre>Example 1:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].</pre>
+          </div>
+        </div>
+
+        <!-- Code Editor -->
+        <div class="editor-panel">
+          <div class="editor-header">
+            <select class="filter-select" style="padding: 6px 12px; font-size: 0.8rem;">
+              <option>Python 3</option>
+              <option>JavaScript</option>
+              <option>Java</option>
+              <option>C++</option>
+            </select>
+            <button class="btn btn-secondary btn-sm">Reset</button>
+          </div>
+          
+          <textarea class="editor-area" id="codeEditor" spellcheck="false">def solve(nums, target):
+    # Write your code here
+    pass
+</textarea>
+
+          <div class="output-console" id="outputConsole" style="display:none;">
+            Running test cases...
+          </div>
+          
+          <div class="editor-footer">
+            <button id="btnRunCode" class="btn btn-secondary">▶ Run Code</button>
+            <button id="btnSubmitCode" class="btn btn-primary" style="background:var(--gradient-cyan)">☁ Submit AI Evaluation</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="coding.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Resume Engineer — Projobbers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="resume.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <h1 style="display:none; font-size:1.5rem; background: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Projobbers</h1>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="jobs.html" class="nav-item">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="skills.html" class="nav-item">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="analytics.html" class="nav-item">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content resume-main-container">
+    <div class="resume-header">
+      <div>
+        <h2 class="gradient-text" style="font-size:1.8rem;">AI Resume Engineer</h2>
+        <p style="color:var(--text-secondary); font-size:0.9rem;">Building a professional, ATS-optimized resume in 8 easy steps.</p>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button id="btnAiScore" class="btn btn-outline" style="border-color:var(--accent-purple); color:var(--accent-purple);"><span class="badge" style="background:var(--accent-purple); color:white; margin-right:6px;" id="hdrScore">0/100</span> Analyze</button>
+        <button id="btnDownloadPdf" class="btn btn-primary">⬇️ Download PDF</button>
+      </div>
+    </div>
+
+    <div class="resume-layout">
+      <!-- Left Panel: Multi-Step Wizard -->
+      <div class="resume-controls">
+        <div class="step-header">
+          <h3 id="stepTitle">Step 1: Your Goals</h3>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div class="step-content" id="stepContainer">
+          <!-- Step 1: Start Screen -->
+          <div class="step-page active" data-step="1">
+            <div class="form-group">
+              <label>What are you building this resume for?</label>
+              <select id="buildFor" class="form-control" style="width:100%; border-radius:8px; padding:10px; background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border);">
+                <option value="Job">Full-time Job</option>
+                <option value="Internship">Internship</option>
+                <option value="Freelance">Freelance / Contract</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Target Company (Optional)</label>
+              <input type="text" id="targetCompany" class="form-control" placeholder="e.g. Google, Microsoft, Startup X">
+            </div>
+          </div>
+
+          <!-- Step 2: Role Selection -->
+          <div class="step-page" data-step="2">
+            <label class="form-group label">Select your target role:</label>
+            <div class="role-grid" style="display:grid; grid-template-columns: 1fr; gap:10px;">
+              <div class="role-card active" data-role="Full Stack Developer">
+                <strong>Full Stack Developer</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted);">Web apps, API, DB</p>
+              </div>
+              <div class="role-card" data-role="Frontend Developer">
+                <strong>Frontend Developer</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted);">UI, UX, React/Vue</p>
+              </div>
+              <div class="role-card" data-role="Backend Developer">
+                <strong>Backend Developer</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted);">Server, Logic, Node/Python</p>
+              </div>
+              <div class="role-card" data-role="Python Developer">
+                <strong>Python Developer</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted);">Automation, Scripting, AI</p>
+              </div>
+              <div class="role-card" data-role="Data Analyst">
+                <strong>Data Analyst</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted);">Insights, SQL, Tableau</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Education -->
+          <div class="step-page" data-step="3">
+            <div class="form-group"><label>College / University</label><input type="text" id="eduCollege" class="form-control" placeholder="State University"></div>
+            <div class="form-group"><label>Degree / Course</label><input type="text" id="eduDegree" class="form-control" placeholder="B.S. Computer Science"></div>
+            <div class="form-group"><label>Graduation Year</label><input type="text" id="eduYear" class="form-control" placeholder="2024"></div>
+            <div class="form-group"><label>CGPA / % (Optional)</label><input type="text" id="eduGpa" class="form-control" placeholder="8.5 / 10"></div>
+          </div>
+
+          <!-- Step 4: Skills -->
+          <div class="step-page" data-step="4">
+            <div class="form-group">
+              <label>Programming Languages</label>
+              <input type="text" id="skillsLang" class="form-control" placeholder="e.g. JavaScript, Python, C++">
+            </div>
+            <div class="form-group">
+              <label>Frameworks & Tools</label>
+              <input type="text" id="skillsTools" class="form-control" placeholder="e.g. React, Docker, Node.js">
+            </div>
+            <div class="form-group">
+              <label>Soft Skills</label>
+              <input type="text" id="skillsSoft" class="form-control" placeholder="e.g. Leadership, Agile, Communication">
+            </div>
+            <button id="btnSuggestSkills" class="btn btn-secondary btn-sm" style="width:100%;">💡 Suggest AI Skills</button>
+          </div>
+
+          <!-- Step 5: Projects -->
+          <div class="step-page" data-step="5">
+            <div id="projectList">
+              <div class="project-item">
+                <div class="form-group"><label>Project Name</label><input type="text" class="form-control proj-name" placeholder="E-commerce App"></div>
+                <div class="form-group"><label>Description</label><textarea class="form-control proj-desc" rows="2" placeholder="Describe what you built..."></textarea></div>
+                <div class="form-group"><label>Tech Used</label><input type="text" class="form-control proj-tech" placeholder="React, Node.js"></div>
+                <div class="form-group"><label>Your Role</label><input type="text" class="form-control proj-role" placeholder="Frontend Lead"></div>
+              </div>
+            </div>
+            <button id="btnAddProject" class="btn btn-outline btn-sm" style="width:100%;">+ Add Another Project</button>
+          </div>
+
+          <!-- Step 6: Experience -->
+          <div class="step-page" data-step="6">
+            <div class="form-group">
+              <label>Do you have work or internship experience?</label>
+              <div style="display:flex; gap:12px;">
+                <button class="btn btn-outline exp-toggle-yes" data-val="yes">Yes</button>
+                <button class="btn btn-outline exp-toggle-no active" data-val="no">No</button>
+              </div>
+            </div>
+            <div id="experienceSection" style="display:none;">
+              <div id="experienceList">
+                <div class="exp-item">
+                  <div class="form-group"><label>Company Name</label><input type="text" class="form-control exp-company"></div>
+                  <div class="form-group"><label>Role</label><input type="text" class="form-control exp-role"></div>
+                  <div class="form-group"><label>Duration</label><input type="text" class="form-control exp-duration" placeholder="June 2023 - Present"></div>
+                  <div class="form-group"><label>Description</label><textarea class="form-control exp-desc" rows="2" placeholder="Key responsibilities..."></textarea></div>
+                </div>
+              </div>
+              <button id="btnAddExperience" class="btn btn-outline btn-sm" style="width:100%;">+ Add Experience</button>
+            </div>
+          </div>
+
+          <!-- Step 7: Achievements -->
+          <div class="step-page" data-step="7">
+            <div class="form-group">
+              <label>Certifications & Achievements</label>
+              <textarea id="achievements" class="form-control" rows="8" placeholder="• AWS Certified Developer&#10;• Winner of Smart India Hackathon&#10;• 5-star coder on HackerRank"></textarea>
+            </div>
+          </div>
+
+          <!-- Step 8: Complete -->
+          <div class="step-page" data-step="8">
+            <div style="text-align:center; padding: 20px;">
+              <div style="font-size: 3rem; margin-bottom: 16px;">🚀</div>
+              <h3>Ready to Generate!</h3>
+              <p style="color:var(--text-secondary); margin-bottom: 24px;">Our AI is ready to optimize your bullet points and structure for ATS systems.</p>
+              <button id="btnFinalGenerate" class="btn btn-primary btn-lg" style="width:100%; justify-content:center; background:var(--gradient-purple);">✨ Generate Professional Resume</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-footer">
+          <button id="btnPrev" class="btn btn-secondary" style="visibility:hidden;">← Back</button>
+          <button id="btnNext" class="btn btn-primary">Next Step →</button>
+        </div>
+      </div>
+
+      <!-- Right Panel: Live Preview -->
+      <div class="resume-preview-container">
+        <div class="template-selector">
+          <button class="tpl-btn active" data-tpl="professional">Professional</button>
+          <button class="tpl-btn" data-tpl="modern">Modern</button>
+          <button class="tpl-btn" data-tpl="simple">Simple Minimal</button>
+        </div>
+        
+        <div class="resume-paper template-professional" id="resumePaper">
+          <div class="res-header">
+            <h1 id="resName" contenteditable="true">Arjun Kumar</h1>
+            <p id="resRoleDisplay" class="res-subtitle" contenteditable="true">Full Stack Developer</p>
+            <p id="resContactDisplay" class="res-contact" contenteditable="true">johndoe@email.com • 9876543210 • github.com/jdoe • linkedin.com/in/johndoe</p>
+          </div>
+
+          <div class="res-section">
+            <h2 class="res-sec-title">Professional Summary</h2>
+            <p id="resSummary" contenteditable="true">Innovative developer experienced in building scalable applications...</p>
+          </div>
+
+          <div class="res-section">
+            <h2 class="res-sec-title">Technical Skills</h2>
+            <div id="resSkills" contenteditable="true">
+              <strong>Languages:</strong> Python, JavaScript, SQL<br>
+              <strong>Tools:</strong> React, Node.js, Docker
+            </div>
+          </div>
+
+          <div class="res-section">
+            <h2 class="res-sec-title">Professional Experience</h2>
+            <div id="resExperience" contenteditable="true">
+              <div class="res-item">
+                <div class="res-item-header"><strong>Software Intern</strong><span>Tech Corp • 2023</span></div>
+                <ul class="res-bullets"><li>Developed core components using React...</li></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="res-section" id="secProjects">
+            <h2 class="res-sec-title">Key Projects</h2>
+            <div id="resProjects" contenteditable="true"></div>
+          </div>
+
+          <div class="res-section">
+            <h2 class="res-sec-title">Education</h2>
+            <div id="resEducation" contenteditable="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- AI Scoring Modal -->
+  <div class="quiz-overlay" id="scoreModal">
+    <div class="quiz-container" style="max-width: 600px; text-align:center;">
+      <div style="background:var(--bg-card); padding:40px; border-radius:var(--radius-xl); border:1px solid var(--accent-purple);">
+        <h2>AI Evaluation Score</h2>
+        <div style="font-size:4rem; font-weight:800; margin: 16px 0;">
+          <span id="finalScore" class="gradient-text">0</span><span style="font-size:2rem; color:var(--text-muted)">/100</span>
+        </div>
+        <p id="scoreVerdict" style="font-weight:600; margin-bottom: 24px;">Good start!</p>
+        <div style="text-align:left; background:var(--bg-secondary); padding:20px; border-radius:var(--radius-md); margin-bottom:30px;">
+          <h4 style="margin-bottom:12px;">Improvements Needed:</h4>
+          <ul id="scoreRecommendations" style="padding-left:20px; color:var(--text-secondary);"></ul>
+        </div>
+        <button class="btn btn-primary btn-lg" id="btnCloseScoreModal" style="width:100%; justify-content:center;">Got it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="mock-responses.js"></script>
+  <script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="resume.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

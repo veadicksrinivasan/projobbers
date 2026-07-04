@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Skill Intelligence — Projobbers</title>
+  <meta name="description" content="Analyze skill gaps, take verification tests, and get a personalized learning roadmap with a job readiness score."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="skills.css"/>
+  <link rel="stylesheet" href="chat.css"/>
+</head>
+<body>
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height:54px;width:100%;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+      <h1 style="display:none;font-size:1.5rem;background:var(--gradient-primary);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">Projobbers</h1>
+    </div>
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+    <a href="jobs.html" class="nav-item"><span class="nav-icon">🎯</span> Job Matcher<span class="nav-badge">12</span></a>
+    <a href="interview.html" class="nav-item"><span class="nav-icon">🤖</span> AI Interview<span class="nav-badge" style="background:var(--gradient-purple)">New</span></a>
+    <a href="coding.html" class="nav-item"><span class="nav-icon">💻</span> Coding Tests<span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span></a>
+    <a href="course.html" class="nav-item"><span class="nav-icon">🗺️</span> AI Roadmap</a>
+    <a href="resume.html" class="nav-item"><span class="nav-icon">📄</span> Resume Builder<span class="nav-badge" style="background:var(--gradient-purple)">AI</span></a>
+    <div class="nav-section-label">Growth</div>
+    <a href="mentor.html" class="nav-item"><span class="nav-icon">🤝</span> Mentor Hub</a>
+    <a href="skills.html" class="nav-item active"><span class="nav-icon">🧠</span> Skills</a>
+    <a href="analytics.html" class="nav-item"><span class="nav-icon">📊</span> Analytics</a>
+    <a href="futureplay.html" class="nav-item"><span class="nav-icon">🎮</span> FuturePlay<span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span></a>
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item"><span class="nav-icon">💬</span> Community<span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span></a>
+    <a href="#" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Skill Intelligence</span></div>
+      <h2>🧠 Skill <span class="gradient-text">Intelligence</span></h2>
+      <p>Input your profile, detect gaps, verify skills, and get a personalized learning roadmap.</p>
+    </div>
+
+    <!-- ===== PROFILE INPUT PANEL ===== -->
+    <div class="si-layout">
+      <aside class="si-panel fade-in" id="profilePanel">
+        <div class="si-panel-header">
+          <span class="si-panel-icon">👤</span>
+          <h3>My Profile</h3>
+        </div>
+
+        <label class="si-label">Target Job Role</label>
+        <select id="targetRole" class="si-select">
+          <option value="">— Select a role —</option>
+          <option value="frontend">Frontend Developer</option>
+          <option value="backend">Backend Developer</option>
+          <option value="fullstack">Full-Stack Developer</option>
+          <option value="datascience">Data Scientist</option>
+          <option value="devops">DevOps Engineer</option>
+          <option value="mobile">Mobile Developer</option>
+          <option value="ml">ML Engineer</option>
+          <option value="qa">QA Engineer</option>
+        </select>
+
+        <label class="si-label" style="margin-top:18px;">My Skills</label>
+        <div class="tag-input-wrap" id="tagWrap">
+          <div class="skill-tags" id="skillTagContainer"></div>
+          <input type="text" id="skillTagInput" class="tag-text-input" placeholder="Type a skill & press Enter…"/>
+        </div>
+        <div class="si-hint">e.g. React, Python, Docker, SQL</div>
+
+        <label class="si-label" style="margin-top:18px;">Resume / About Me</label>
+        <textarea id="resumeText" class="si-textarea" rows="6" placeholder="Paste your resume summary or a brief description of your experience…"></textarea>
+
+        <button class="btn btn-primary si-analyze-btn" id="analyzeBtn" onclick="analyzeProfile()">
+          ⚡ Analyze My Profile
+        </button>
+
+        <div class="si-progress-wrap" id="analyzeProgress" style="display:none;">
+          <div class="si-progress-bar" id="analyzeBar"></div>
+          <div class="si-progress-label" id="analyzeLabel">Analyzing…</div>
+        </div>
+      </aside>
+
+      <!-- ===== RIGHT: RESULTS ===== -->
+      <div class="si-results" id="siResults">
+
+        <!-- EMPTY STATE -->
+        <div class="si-empty" id="siEmpty">
+          <div class="si-empty-icon">🎯</div>
+          <h3>Ready to Analyze</h3>
+          <p>Select your target role, add your skills, and click <strong>Analyze My Profile</strong> to see your job readiness score, skill gaps, and personalized roadmap.</p>
+        </div>
+
+        <!-- STAT ROW -->
+        <div class="si-stats fade-in" id="siStats" style="display:none;">
+          <div class="si-stat-card">
+            <div class="si-stat-val" id="statTracked">0</div>
+            <div class="si-stat-label">Skills Tracked</div>
+          </div>
+          <div class="si-stat-card">
+            <div class="si-stat-val" id="statGaps" style="color:var(--accent-pink)">0</div>
+            <div class="si-stat-label">Skill Gaps</div>
+          </div>
+          <div class="si-stat-card">
+            <div class="si-stat-val" id="statVerified" style="color:var(--accent-green)">0</div>
+            <div class="si-stat-label">Verified</div>
+          </div>
+          <div class="si-stat-card">
+            <div class="si-stat-val" id="statSteps">0</div>
+            <div class="si-stat-label">Roadmap Steps</div>
+          </div>
+        </div>
+
+        <!-- JOB READINESS SCORE -->
+        <div class="si-section fade-in" id="siScore" style="display:none;">
+          <div class="si-section-head">
+            <h3>📊 Job Readiness Score</h3>
+            <span class="si-badge" id="readinessBadge">—</span>
+          </div>
+          <div class="readiness-wrap">
+            <div class="readiness-ring-wrap">
+              <svg class="readiness-ring" viewBox="0 0 160 160" width="160" height="160">
+                <defs>
+                  <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%"   stop-color="#4f8ef7"/>
+                    <stop offset="100%" stop-color="#8b5cf6"/>
+                  </linearGradient>
+                </defs>
+                <circle class="ring-bg" cx="80" cy="80" r="66"/>
+                <circle class="ring-fill" id="ringFill" cx="80" cy="80" r="66"
+                  stroke="url(#ringGrad)"
+                  stroke-dasharray="415"
+                  stroke-dashoffset="415"/>
+              </svg>
+              <div class="ring-center">
+                <span class="ring-score" id="ringScore">0</span>
+                <span class="ring-label">/ 100</span>
+              </div>
+            </div>
+            <div class="readiness-breakdown" id="readinessBreakdown"></div>
+          </div>
+        </div>
+
+        <!-- GAP ANALYSIS -->
+        <div class="si-section fade-in" id="siGap" style="display:none;">
+          <div class="si-section-head">
+            <h3>🔍 Skill Gap Analysis</h3>
+            <span class="si-role-tag" id="gapRoleTag"></span>
+          </div>
+          <div class="gap-grid">
+            <div class="gap-col matched">
+              <div class="gap-col-head">✅ Matched Skills</div>
+              <div class="gap-tags" id="matchedTags"></div>
+            </div>
+            <div class="gap-col missing">
+              <div class="gap-col-head">❌ Skill Gaps</div>
+              <div class="gap-tags" id="missingTags"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SKILL VERIFICATION -->
+        <div class="si-section fade-in" id="siVerify" style="display:none;">
+          <div class="si-section-head">
+            <h3>✅ Skill Verification Tests</h3>
+            <span style="font-size:0.8rem;color:var(--text-muted);">Score ≥70% to earn a verified badge</span>
+          </div>
+          <div class="verify-grid" id="verifyGrid"></div>
+        </div>
+
+        <!-- LEARNING ROADMAP -->
+        <div class="si-section fade-in" id="siRoadmap" style="display:none;">
+          <div class="si-section-head">
+            <h3>🗺️ Personalized Learning Roadmap</h3>
+            <button class="btn btn-outline btn-sm" onclick="resetProgress()">↺ Reset Progress</button>
+          </div>
+          <div class="roadmap-list" id="roadmapList"></div>
+        </div>
+
+      </div><!-- /.si-results -->
+    </div><!-- /.si-layout -->
+  </main>
+</div>
+
+<!-- ===== QUIZ MODAL ===== -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-box">
+    <div class="quiz-header">
+      <div>
+        <div class="quiz-skill-name" id="quizSkillName">React</div>
+        <div class="quiz-progress-text" id="quizProgressText">Question 1 of 5</div>
+      </div>
+      <button class="quiz-close-btn" onclick="closeQuiz()">✕</button>
+    </div>
+    <div class="quiz-progress-bar-wrap">
+      <div class="quiz-progress-fill" id="quizProgressFill" style="width:20%"></div>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-question" id="quizQuestion"></div>
+      <div class="quiz-options" id="quizOptions"></div>
+    </div>
+    <div class="quiz-footer" id="quizFooter"></div>
+  </div>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="skills.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>

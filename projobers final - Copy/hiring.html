@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hire Top Talent — Projobers for Employers</title>
+  <meta name="description" content="Projobers Employer Portal — Hire top talent, build winning teams, and streamline recruitment with AI."/>
+  <meta name="platform-session" content="Hiring">
+  <script>
+    window.platformSessionName = "Hiring";
+  </script>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    /* ── Hiring Page Specific Styles ── */
+    
+    /* Navigation override for Employers */
+    .landing-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px;
+      background: rgba(8,11,20,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-img { height: 42px; width: auto; border-radius: 8px; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link {
+      padding: 8px 16px; border-radius: var(--radius-md);
+      color: var(--text-secondary); font-size: 0.88rem; font-weight: 500; transition: var(--transition);
+    }
+    .nav-link.active, .nav-link:hover { color: var(--text-primary); background: var(--bg-card); }
+    .nav-cta { display: flex; align-items: center; gap: 10px; }
+    
+    /* Hero Section */
+    .hiring-hero {
+      position: relative;
+      padding: 150px 20px 100px;
+      text-align: center;
+      min-height: 80vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 800px 500px at 50% 0%, rgba(16,212,142,0.1) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 80% 50%, rgba(79,142,247,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hiring-hero-inner { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(16,212,142,0.1); border: 1px solid rgba(16,212,142,0.25);
+      padding: 6px 16px; border-radius: var(--radius-full);
+      font-size: 0.82rem; font-weight: 600; color: var(--accent-green);
+      margin-bottom: 24px; animation: fadeInDown 0.8s ease forwards;
+    }
+    .hiring-hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 24px; animation: fadeInUp 0.9s ease 0.1s both; line-height: 1.1; }
+    .hiring-hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 40px; color: var(--text-secondary); animation: fadeInUp 0.9s ease 0.2s both; }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; animation: fadeInUp 0.9s ease 0.3s both; }
+    
+    /* Feature Section */
+    .feature-row {
+      display: flex; align-items: center; gap: 60px;
+      padding: 100px 60px; max-width: 1200px; margin: 0 auto;
+    }
+    .feature-row.reverse { flex-direction: row-reverse; }
+    .feature-content { flex: 1; }
+    .feature-content h2 { margin-bottom: 16px; font-size: 2.2rem; }
+    .feature-content p { font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.7; }
+    
+    .feature-visual { flex: 1; position: relative; }
+    
+    /* Recruiter Dashboard Preview Mockup */
+    .mockup-window {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+    .mockup-header {
+      background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border);
+      padding: 12px 20px; display: flex; gap: 8px;
+    }
+    .mac-btn { width: 12px; height: 12px; border-radius: 50%; }
+    .mac-close { background: #ff5f56; } .mac-min { background: #ffbd2e; } .mac-max { background: #27c93f; }
+    .mockup-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+    
+    /* Mockup Items */
+    .mock-candidate {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 16px; border-radius: var(--radius-md);
+    }
+    .mock-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+    .mock-info { flex: 1; }
+    .mock-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+    .mock-role { font-size: 0.75rem; color: var(--text-muted); }
+    .mock-score { font-size: 1.2rem; font-weight: 800; color: var(--accent-green); }
+    
+    /* FAQ Section */
+    .faq-section { max-width: 800px; margin: 0 auto; padding: 100px 20px; }
+    .faq-item {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-md); margin-bottom: 16px;
+      overflow: hidden; transition: var(--transition);
+    }
+    .faq-question {
+      padding: 24px; padding-right: 48px; position: relative;
+      cursor: pointer; font-size: 1.05rem; font-weight: 600;
+    }
+    .faq-question::after {
+      content: '+'; position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+      font-size: 1.5rem; color: var(--text-muted); transition: var(--transition);
+    }
+    .faq-answer {
+      padding: 0 24px; max-height: 0; overflow: hidden;
+      color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; transition: all 0.4s ease;
+    }
+    .faq-item.active { border-color: var(--border-accent); }
+    .faq-item.active .faq-question::after { content: '−'; color: var(--accent-blue); }
+    .faq-item.active .faq-answer { padding: 0 24px 24px; max-height: 300px; }
+    
+    /* Floating Voice Assistant */
+    .voice-fab {
+      position: fixed; bottom: 40px; right: 40px; z-index: 1000;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      box-shadow: 0 8px 30px rgba(79,142,247,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: white; cursor: pointer;
+      border: none; outline: none; transition: var(--transition);
+    }
+    .voice-fab:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(79,142,247,0.6); }
+    .voice-fab::before {
+      content: ''; position: absolute; inset: -4px;
+      border-radius: 50%; border: 2px solid var(--accent-blue);
+      animation: ripple 2s infinite; opacity: 0; pointer-events: none;
+    }
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    
+    /* Voice Assistant Tooltip / Chat Mockup */
+    .voice-tooltip {
+      position: fixed; bottom: 120px; right: 40px; z-index: 999;
+      background: var(--bg-secondary); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 16px;
+      width: 320px; box-shadow: var(--shadow-strong);
+      opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .voice-tooltip.active { opacity: 1; visibility: visible; transform: translateY(0); }
+    .voice-tooltip::after {
+      content: ''; position: absolute; bottom: -8px; right: 24px;
+      width: 16px; height: 16px; background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+      transform: rotate(45deg);
+    }
+    
+    .chat-msg { background: var(--bg-card); padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.85rem; margin-bottom: 10px; width: fit-content; max-width: 90%; }
+    .chat-msg.user { background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.3); color: var(--accent-blue); margin-left: auto; border-bottom-right-radius: 4px; }
+    .chat-msg.ai { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); border-bottom-left-radius: 4px; }
+    .voice-hints { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .voice-hint { background: var(--bg-card); border: 1px solid var(--border); padding: 6px 10px; border-radius: 99px; font-size: 0.72rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+    .voice-hint:hover { background: rgba(79,142,247,0.1); color: var(--accent-blue); border-color: rgba(79,142,247,0.3); }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Employer Modal */
+    .employer-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+      z-index: 10000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    }
+    .employer-modal-overlay.active { opacity: 1; visibility: visible; }
+    .employer-modal {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl);
+      padding: 40px; width: 90%; max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: translateY(20px); transition: transform 0.3s ease;
+    }
+    .employer-modal-overlay.active .employer-modal { transform: translateY(0); }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .form-group input {
+      width: 100%; padding: 12px 16px; box-sizing: border-box;
+      background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-md);
+      color: var(--text-primary); outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--accent-blue); }
+
+    @media (max-width: 900px) {
+      .landing-nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .feature-row, .feature-row.reverse { flex-direction: column; padding: 60px 24px; gap: 40px; }
+    }
+    @media (max-width: 600px) {
+      .hiring-hero h1 { font-size: 2.2rem; }
+      .hero-cta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<!-- Custom Navbar for Employers -->
+<nav class="landing-nav" id="landing-nav">
+  <div class="nav-logo">
+    <img src="logo.jpg" alt="Projobers" style="height: 48px; border-radius: 8px;">
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="jobs.html" class="nav-link">Job Matcher</a>
+    <a href="skills.html" class="nav-link">Skills</a>
+    <a href="mentor.html" class="nav-link">Mentors</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="hiring.html" class="nav-link active">For Employers</a>
+  </div>
+  <div class="nav-cta">
+    <a href="dashboard.html" class="btn btn-secondary btn-sm">Sign In</a>
+    <button class="btn btn-primary btn-sm open-emp-modal">Get Started</button>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hiring-hero">
+  <div class="hero-bg"></div>
+  <div class="hiring-hero-inner">
+    <div class="hero-eyebrow">🚀 The undisputed standard in Tech Hiring</div>
+    <h1>Hire Top Talent,<br><span class="gradient-text-green">Build Winning Teams.</span></h1>
+    <p>Empower your hiring pipeline with AI. Projobers precisely matches your job requirements with verified developers, designers, and engineering teams instantly.</p>
+    <div class="hero-cta">
+      <button class="btn btn-green btn-lg open-emp-modal">🎯 Post a Job</button>
+      <button class="btn btn-secondary btn-lg open-emp-modal">🔍 Explore Candidates</button>
+    </div>
+  </div>
+</section>
+
+<!-- Feature: Dashboard Preview -->
+<div class="feature-row fade-in">
+  <div class="feature-content">
+    <div class="section-label">Recruiter Dashboard</div>
+    <h2>End-to-End <span class="gradient-text">Candidate Pipeline</span></h2>
+    <p>Manage all your job postings from a single intuitive dashboard. Track applications in real-time, view verified candidate profiles, and organize your pipeline with one click.</p>
+    <ul style="list-style: none; margin-bottom: 24px;">
+      <li style="display:flex; gap:10px; margin-bottom:12px; font-size:0.95rem; color:var(--text-secondary)"><span style="color:var(--accent-blue)">✓</span> Track application status and pipeline stages</li>
+      <li style="display:flex; gap:10px; margin-bottom:12px; font-size:0.95rem; color:var(--text-secondary)"><span style="color:var(--accent-blue)">✓</span> Schedule interviews natively through the platform</li>
+      <li style="display:flex; gap:10px; margin-bottom:12px; font-size:0.95rem; color:var(--text-secondary)"><span style="color:var(--accent-blue)">✓</span> View candidates' verified skill badges and analytics</li>
+    </ul>
+    <button class="btn btn-outline open-emp-modal">Explore Dashboard Features →</button>
+  </div>
+  <div class="feature-visual">
+    <div class="mockup-window">
+      <div class="mockup-header">
+        <div class="mac-btn mac-close"></div>
+        <div class="mac-btn mac-min"></div>
+        <div class="mac-btn mac-max"></div>
+      </div>
+      <div class="mockup-body" style="background:#080b14;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+          <h4 style="font-size:0.9rem;">Senior React Developer</h4>
+          <span class="badge badge-blue">142 Candidates</span>
+        </div>
+        <!-- Mock Candidate 1 -->
+        <div class="mock-candidate">
+          <div class="mock-avatar" style="background:var(--gradient-primary)">AK</div>
+          <div class="mock-info">
+            <div class="mock-name">Arjun Kumar <span style="color:var(--accent-green); font-size:0.8rem; margin-left:4px;">✓ Verified</span></div>
+            <div class="mock-role">Current: SDE II at Amazon · Applied 2h ago</div>
+          </div>
+          <div class="mock-score">96%</div>
+        </div>
+        <!-- Mock Candidate 2 -->
+        <div class="mock-candidate">
+          <div class="mock-avatar" style="background:var(--gradient-warm)">PS</div>
+          <div class="mock-info">
+            <div class="mock-name">Priya Sharma</div>
+            <div class="mock-role">Current: Frontend Lead at Startup X · Applied 1d ago</div>
+          </div>
+          <div class="mock-score">91%</div>
+        </div>
+        <!-- Mock Candidate 3 -->
+        <div class="mock-candidate">
+          <div class="mock-avatar" style="background:var(--gradient-cyan)">RM</div>
+          <div class="mock-info">
+            <div class="mock-name">Rohit Mehta <span style="color:var(--accent-green); font-size:0.8rem; margin-left:4px;">✓ Verified</span></div>
+            <div class="mock-role">Current: UI Developer at TCS · Applied 2d ago</div>
+          </div>
+          <div class="mock-score">88%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feature: AI Matching -->
+<div class="feature-row reverse fade-in">
+  <div class="feature-content">
+    <div class="section-label" style="color:var(--accent-purple); border-color:rgba(139,92,246,0.3); background:rgba(139,92,246,0.1);">Precision Ranking</div>
+    <h2>AI-Assisted <span style="background:var(--gradient-purple); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:var(--accent-purple);">Candidate Matching</span></h2>
+    <p>Don't waste time screening hundreds of resumes. Our AI deeply analyzes a candidate's portfolio, verified skills, and experience against your job description to compute a highly accurate compatibility score.</p>
+    <div style="background:var(--bg-card); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md); margin-bottom:24px;">
+      <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px; display:flex; gap:8px;"><span style="color:var(--accent-purple)">🤖</span> AI Recommendation Engine</div>
+      <p style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; margin:0;">
+        "Candidate matches perfectly on React and TypeScript requirements. Culture fit is high based on previous startup experience. Missing Docker expertise (only 40% match) but excels in requested frontend skills."
+      </p>
+    </div>
+  </div>
+  <div class="feature-visual">
+    <div style="position:relative; width:300px; margin:0 auto;">
+      <!-- Score Ring Visualization -->
+      <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl); padding:40px; display:flex; flex-direction:column; align-items:center; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+        <div class="score-ring" data-score="96" data-size="160" data-stroke="12" data-color="#10d48e" data-color2="#4f8ef7" data-label="Match">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#10d48e"/><stop offset="100%" stop-color="#4f8ef7"/></linearGradient></defs>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="url(#g1)" stroke-width="12" stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="17" style="transform: rotate(-90deg); transform-origin: center; animation: ringAnim 2s ease-out forwards;"/>
+          </svg>
+          <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="font-size:2.5rem; font-weight:800; color:var(--text-primary); line-height:1;">96%</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:4px;">Match Score</div>
+          </div>
+        </div>
+        <div style="width:100%; margin-top:32px;">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:6px;"><span>Skills Fit</span><strong style="color:var(--accent-green)">98%</strong></div>
+          <div class="progress-bar-wrap" style="height:6px; margin-bottom:12px;"><div class="progress-bar" style="width:98%; background:var(--gradient-green)"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:6px;"><span>Culture Fit</span><strong style="color:var(--accent-blue)">92%</strong></div>
+          <div class="progress-bar-wrap" style="height:6px;"><div class="progress-bar" style="width:92%; background:var(--gradient-primary)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<div style="background:var(--bg-secondary); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:100px 20px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:56px;">
+      <h2>Trusted by <span class="gradient-text">Top Engineering Teams</span></h2>
+      <p style="color:var(--text-secondary); margin-top:12px;">See what hiring managers and talent acquisition teams say about Projobers.</p>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px;">
+      <div class="card">
+        <div style="color:#fbbf24; font-size:1rem; margin-bottom:16px;">★★★★★</div>
+        <p style="font-size:0.95rem; color:var(--text-secondary); line-height:1.7; margin-bottom:24px;">
+          "The AI matching is phenomenal. Instead of sifting through 500 applications, I review the top 20 candidates the AI recommends. We lowered our time-to-hire by 40%."
+        </p>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="width:40px; height:40px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">SA</div>
+          <div>
+            <div style="font-size:0.9rem; font-weight:600;">Sarah Ahmed</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">VP of Engineering, Startup Inc.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div style="color:#fbbf24; font-size:1rem; margin-bottom:16px;">★★★★★</div>
+        <p style="font-size:0.95rem; color:var(--text-secondary); line-height:1.7; margin-bottom:24px;">
+          "The verified skill badges completely eliminated our need for first-round technical screening. If Projobers says they know React, they actually know React."
+        </p>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="width:40px; height:40px; border-radius:50%; background:var(--gradient-cyan); display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">JD</div>
+          <div>
+            <div style="font-size:0.9rem; font-weight:600;">James Donovan</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Tech Talent Acquisition, FinTech Co</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="color:#fbbf24; font-size:1rem; margin-bottom:16px;">★★★★★</div>
+        <p style="font-size:0.95rem; color:var(--text-secondary); line-height:1.7; margin-bottom:24px;">
+          "Using the AI assistant to query candidates naturally is a game changer. I just typed 'Find senior backend devs with AWS experience' and had an instant pipeline."
+        </p>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div style="width:40px; height:40px; border-radius:50%; background:var(--gradient-warm); display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">MT</div>
+          <div>
+            <div style="font-size:0.9rem; font-weight:600;">Mia Turner</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);">Lead Recruiter, CloudSys</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="faq-section fade-in">
+  <div style="text-align:center; margin-bottom:48px;">
+    <h2>Frequently Asked Questions</h2>
+  </div>
+  
+  <div class="faq-accordion">
+    <div class="faq-item" onclick="this.classList.toggle('active')">
+      <div class="faq-question">How does the AI Matching Engine work?</div>
+      <div class="faq-answer">Our AI analyzes over 50 data points from a candidate's profile, including their verified challenge results, GitHub repositories, and past experience. It maps these against your job requirements to provide an accurate percentage match, saving you hours of manual screening.</div>
+    </div>
+    
+    <div class="faq-item" onclick="this.classList.toggle('active')">
+      <div class="faq-question">Are the skill badges actually credible?</div>
+      <div class="faq-answer">Yes. Projobers requires candidates to pass realistic, timed coding assessments and systemic architecture challenges to earn a 'Verified' badge. This ensures they possess the actual capability, not just keyword stuffing on their resume.</div>
+    </div>
+    
+    <div class="faq-item" onclick="this.classList.toggle('active')">
+      <div class="faq-question">Can I integrate Projobers with my existing ATS?</div>
+      <div class="faq-answer">Absolutely. We offer direct integrations with popular Applicant Tracking Systems like Workday, Greenhouse, and Lever. Export top matches into your existing pipeline with a single click.</div>
+    </div>
+    
+    <div class="faq-item" onclick="this.classList.toggle('active')">
+      <div class="faq-question">What pricing plans do you offer for employers?</div>
+      <div class="faq-answer">We offer flexible plans ranging from Pay-Per-Post for small startups, to comprehensive Enterprise subscriptions that unlock unlimited postings, full access to the AI Sourcing Assistant, and dedicated account management.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Footer -->
+<footer style="margin-top:0; background:var(--bg-primary);">
+  <div class="footer-brand">
+    <img src="logo.jpg" alt="Projobers" style="height: 36px; border-radius: 6px;">
+    <span class="badge badge-blue">Employers</span>
+  </div>
+  <div class="footer-links">
+    <a href="hiring.html">Hiring Solutions</a>
+    <a href="#">Pricing</a>
+    <a href="#">Terms & Privacy</a>
+  </div>
+  <div class="footer-copy">© 2026 Projobers. All rights reserved.</div>
+</footer>
+
+<!-- Floating Voice Assistant -->
+<button class="voice-fab" id="voiceFab">
+  🎙️
+</button>
+
+<div class="voice-tooltip" id="voiceTooltip">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div style="font-size:0.85rem; font-weight:700; color:var(--accent-blue); display:flex; align-items:center; gap:6px;">
+      <span style="font-size:1.2rem;">✨</span> AI Recruiter Assistant
+    </div>
+    <button style="color:var(--text-muted); font-size:1rem;" onclick="document.getElementById('voiceTooltip').classList.remove('active')">✕</button>
+  </div>
+  
+  <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column;">
+    <div class="chat-msg ai">Hi! I am your AI sourcing assistant. How can I help you find talent today?</div>
+    <div class="chat-msg user" id="userMsg" style="display:none;">Find me app developers.</div>
+    <div class="chat-msg ai" id="aiResponse" style="display:none;">
+      I found <strong>342</strong> matched App Developers.<br>
+      <a href="#" style="color:var(--accent-blue); font-weight:600; font-size:0.8rem; margin-top:8px; display:inline-block;">View Candidates →</a>
+    </div>
+  </div>
+  
+  <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:8px;">Try asking:</div>
+    <div class="voice-hints">
+      <div class="voice-hint" onclick="simulateVoiceMsg('Find me app developers')">"Find me app developers"</div>
+      <div class="voice-hint" onclick="simulateVoiceMsg('Filter candidates by experience > 5 yrs')">"Filter by > 5 yrs exp"</div>
+      <div class="voice-hint" onclick="simulateVoiceMsg('Who matches my Senior React role?')">"Match my open roles"</div>
+    </div>
+  </div>
+</div>
+
+<!-- Employer Onboarding Modal -->
+<div class="employer-modal-overlay" id="employerGateway">
+  <div class="employer-modal">
+    <button class="close-modal" id="closeGateway" style="position:absolute; top:20px; right:20px; font-size:1.5rem; color:var(--text-muted);">&times;</button>
+    <div style="text-align:center; margin-bottom:24px;">
+      <h2 style="font-size:1.8rem; margin-bottom:8px;">Access Dashboard</h2>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">Complete your employer profile to continue.</p>
+    </div>
+    <form id="employerForm">
+      <div class="form-group"><label>Full Name</label><input type="text" required placeholder="John Doe"></div>
+      <div class="form-group"><label>Company Name</label><input type="text" required placeholder="Acme Corp"></div>
+      <div class="form-group"><label>Your Role / Job Title</label><input type="text" required placeholder="HR Manager"></div>
+      <div style="display:flex; gap:16px;">
+        <div class="form-group" style="flex:1"><label>Place / City</label><input type="text" required placeholder="New York"></div>
+        <div class="form-group" style="flex:1"><label>Phone Number</label><input type="tel" required placeholder="+1 234 567 8900"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:24px;"><label>Work Email</label><input type="email" required placeholder="john@acme.com"></div>
+      <button type="submit" class="btn btn-primary" style="width:100%; font-size:1.05rem;" id="empSubmitBtn">Access Recruiter Dashboard</button>
+    </form>
+  </div>
+</div>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('landing-nav');
+    nav.style.boxShadow = window.scrollY > 40 ? 'var(--shadow-card)' : 'none';
+  });
+  
+  // Voice Assistant interaction
+  const voiceFab = document.getElementById('voiceFab');
+  const voiceTooltip = document.getElementById('voiceTooltip');
+  const userMsg = document.getElementById('userMsg');
+  const aiResponse = document.getElementById('aiResponse');
+  
+  voiceFab.addEventListener('click', () => {
+    voiceTooltip.classList.toggle('active');
+  });
+  
+  function simulateVoiceMsg(text) {
+    userMsg.textContent = text;
+    userMsg.style.display = 'block';
+    aiResponse.style.display = 'none';
+    
+    // Simulate AI typing delay
+    setTimeout(() => {
+      aiResponse.style.display = 'block';
+      let html = '';
+      if (text.includes('developers')) {
+        html = `I found <strong>1,240</strong> matching App Developers across Android and iOS.<br><a href="#" class="open-emp-modal" style="color:var(--accent-blue); font-weight:600; font-size:0.8rem; margin-top:8px; display:inline-block;">View Candidates →</a>`;
+      } else if (text.includes('experience')) {
+        html = `Filter applied. Currently viewing <strong>318</strong> candidates with 5+ years experience.`;
+      } else {
+        html = `Sure, I'll match candidates against your "Senior React Developer" posting... Highly ranked candidates ready.`;
+      }
+      aiResponse.innerHTML = html;
+      bindModalEvents(); // Re-bind dynamic links
+    }, 800);
+  }
+
+  // Modal Logic
+  function bindModalEvents() {
+    const triggers = document.querySelectorAll('.open-emp-modal');
+    triggers.forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('employerGateway').classList.add('active');
+    }));
+  }
+  
+  document.getElementById('closeGateway').addEventListener('click', () => {
+    document.getElementById('employerGateway').classList.remove('active');
+  });
+
+  document.getElementById('employerForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('empSubmitBtn');
+    btn.innerHTML = '<span class="typing-dot" style="display:inline-block;animation:ripple 1s infinite;background:white;width:8px;height:8px;border-radius:50%;margin-right:8px;"></span> Verifying details...';
+    btn.style.opacity = '0.8';
+    setTimeout(() => {
+      // Logic: Save to local storage conceptually, then redirect
+      window.location.href = 'dashboard.html';
+    }, 1500);
+  });
+
+  bindModalEvents();
+</script>
+<script src="chat.js"></script>
+</body>
+</html>

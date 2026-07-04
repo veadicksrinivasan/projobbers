@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projobbers — AI-Powered Career Platform</title>
+  <meta name="description" content="Projobbers is the AI-powered career development and recruitment platform that bridges learning with employment through intelligent skill analysis, job matching, and mentoring."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <style>
+    /* Landing-specific styles */
+    body { overflow-x: hidden; }
+
+    /* ── NAVBAR ── */
+    .landing-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px;
+      background: rgba(8,11,20,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo .logo-icon { width: 38px; height: 38px; border-radius: 10px; }
+    .nav-logo .logo-text { font-size: 1.3rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .nav-link:hover { color: var(--text-primary); background: var(--bg-card); }
+
+    .nav-cta { display: flex; align-items: center; gap: 10px; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+      position: relative;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 800px 600px at 50% -100px, rgba(79,142,247,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 500px at -10% 60%, rgba(139,92,246,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 500px 400px at 110% 60%, rgba(6,214,214,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(79,142,247,0.1);
+      border: 1px solid rgba(79,142,247,0.25);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 24px;
+      animation: fadeInDown 0.8s ease forwards;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+
+    .hero h1 {
+      animation: fadeInUp 0.9s ease 0.1s both;
+      margin-bottom: 24px;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero p.hero-sub {
+      font-size: 1.15rem;
+      max-width: 580px; margin: 0 auto 40px;
+      animation: fadeInUp 0.9s ease 0.2s both;
+      line-height: 1.75;
+    }
+
+    .hero-cta {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: center;
+      animation: fadeInUp 0.9s ease 0.3s both;
+    }
+
+    .hero-stats {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 40px;
+      margin-top: 72px;
+      animation: fadeInUp 0.9s ease 0.5s both;
+    }
+
+    .hero-stat { text-align: center; }
+    .hero-stat .hero-stat-val {
+      font-size: 2.2rem; font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      display: block;
+    }
+    .hero-stat .hero-stat-label { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+
+    /* ── FEATURES ── */
+    .section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      background: rgba(79,142,247,0.1);
+      border: 1px solid rgba(79,142,247,0.2);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      margin-bottom: 16px;
+    }
+
+    .section-header { margin-bottom: 56px; }
+    .section-header h2 { margin-bottom: 12px; }
+    .section-header p { font-size: 1rem; max-width: 480px; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--card-gradient, var(--gradient-primary));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(79,142,247,0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 { margin-bottom: 10px; font-size: 1.15rem; }
+    .feature-card p { font-size: 0.87rem; line-height: 1.65; }
+
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      color: var(--accent-blue); font-size: 0.82rem; font-weight: 600;
+      margin-top: 16px;
+      transition: gap 0.2s;
+    }
+    .feature-link:hover { gap: 8px; }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 100px 60px; }
+
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+      max-width: 1100px; margin: 0 auto;
+      position: relative;
+    }
+
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 60px; right: 60px;
+      height: 2px;
+      background: var(--gradient-primary);
+      opacity: 0.3;
+    }
+
+    .step-item { text-align: center; position: relative; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-full);
+      background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 800; color: white;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 24px rgba(79,142,247,0.3);
+      position: relative; z-index: 1;
+    }
+    .step-item h4 { margin-bottom: 8px; }
+    .step-item p { font-size: 0.85rem; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: var(--transition);
+    }
+    .testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--border-accent); }
+
+    .tcard-stars { color: #fbbf24; font-size: 0.9rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .tcard-quote { font-size: 0.9rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 20px; }
+    .tcard-author { display: flex; align-items: center; gap: 10px; }
+    .tcard-author .avatar { background: var(--gradient-primary); width:40px; height:40px; font-size:0.9rem; }
+    .tcard-author-info .name { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+    .tcard-author-info .role { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 64px;
+      text-align: center;
+      position: relative; overflow: hidden;
+      margin: 0 60px 80px;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 600px 400px at 50% 50%, rgba(79,142,247,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-banner h2 { margin-bottom: 14px; }
+    .cta-banner p { margin-bottom: 32px; font-size: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 60px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 10px; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.82rem; color: var(--text-muted); transition: var(--transition); }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .landing-nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .section { padding: 60px 24px; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .steps-grid { grid-template-columns: repeat(2,1fr); }
+      .steps-grid::before { display:none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .cta-banner { margin: 0 24px 60px; padding: 40px 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+      .how-it-works { padding: 60px 24px; }
+    }
+    @media (max-width: 600px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .hero { padding: 120px 20px 60px; }
+      .hero-stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BACKGROUND GLOWS -->
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<!-- NAVBAR -->
+<nav class="landing-nav" id="landing-nav">
+  <div class="nav-logo">
+    <img src="logo.jpg" alt="Projobbers" style="height: 48px; border-radius: 8px;">
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="ai-chat.html" class="nav-link" style="color: var(--accent-blue); font-weight: 700;">AI Chat</a>
+    <a href="jobs.html" class="nav-link">Job Matcher</a>
+    <a href="skills.html" class="nav-link">Skills</a>
+    <a href="mentor.html" class="nav-link">Mentors</a>
+    <a href="analytics.html" class="nav-link">Analytics</a>
+    <a href="hiring.html" class="nav-link">For Employers</a>
+  </div>
+  <div class="nav-cta">
+    <a href="dashboard.html" class="btn btn-secondary btn-sm">Sign In</a>
+    <a href="Register form.html" class="btn btn-primary btn-sm">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">✨ AI-Powered Career Intelligence</div>
+    <h1>Your Career,<br><span class="gradient-text">Supercharged by AI</span></h1>
+    <p class="hero-sub">
+      Projobbers bridges the gap between where you are today and where you want to be — with intelligent skill analysis, precision job matching, and expert mentorship.
+    </p>
+    <div class="hero-cta">
+      <a href="Register form.html" class="btn btn-primary btn-lg">🚀 Start Your Journey</a>
+      <a href="Register form.html" class="btn btn-secondary btn-lg">🔍 Explore Jobs</a>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<div style="padding: 0 0 0 0;">
+  <div class="section">
+    <div class="section-header fade-in">
+      <div class="section-label">Core Platform</div>
+      <h2>Everything You Need to<br><span class="gradient-text">Accelerate Your Career</span></h2>
+      <p>Five AI-powered engines working together to make your career growth inevitable.</p>
+    </div>
+
+    <div class="feature-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card fade-in fade-in-delay-1" style="--card-gradient: linear-gradient(90deg,#4f8ef7,#8b5cf6)">
+        <div class="feature-icon" style="background:rgba(79,142,247,0.15)">🧠</div>
+        <h3>AI Skill Intelligence</h3>
+        <p>Analyzes your entire portfolio, projects, and experience to map your strengths, identify gaps, and generate a personalized career roadmap with actionable next steps.</p>
+        <a href="skills.html" class="feature-link">Explore Skills →</a>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card fade-in fade-in-delay-2" style="--card-gradient: linear-gradient(90deg,#10d48e,#06d6d6)">
+        <div class="feature-icon" style="background:rgba(16,212,142,0.15)">🎯</div>
+        <h3>AI Job Matching</h3>
+        <p>Our AI evaluates your profile against thousands of job postings to compute a compatibility score, explain the match, and surface opportunities perfectly tailored to you.</p>
+        <a href="jobs.html" class="feature-link">Find Jobs →</a>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card fade-in fade-in-delay-3" style="--card-gradient: linear-gradient(90deg,#f97316,#ec4899)">
+        <div class="feature-icon" style="background:rgba(249,115,22,0.15)">🏆</div>
+        <h3>Skill Verification</h3>
+        <p>Earn recognized skill badges through real-world challenges and practical assessments — giving recruiters concrete proof of your abilities beyond a simple resume listing.</p>
+        <a href="skills.html" class="feature-link">Get Verified →</a>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card fade-in fade-in-delay-1" style="--card-gradient: linear-gradient(90deg,#8b5cf6,#ec4899)">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.15)">🤝</div>
+        <h3>AI Mentor Matching</h3>
+        <p>Connect with senior engineers and tech leaders who've walked your path. Our AI matches you on goals, skills, and learning style for maximum mentorship impact.</p>
+        <a href="mentor.html" class="feature-link">Meet Mentors →</a>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card fade-in fade-in-delay-2" style="--card-gradient: linear-gradient(90deg,#06d6d6,#4f8ef7)">
+        <div class="feature-icon" style="background:rgba(6,214,214,0.15)">📊</div>
+        <h3>Predictive Analytics</h3>
+        <p>Stay ahead of the market. Our forecasting engine analyzes hiring trends, salary curves, and emerging tech to show you exactly which skills to invest in next.</p>
+        <a href="analytics.html" class="feature-link">View Analytics →</a>
+      </div>
+
+      <!-- Feature 6 — Community -->
+      <div class="feature-card fade-in fade-in-delay-3" style="--card-gradient: linear-gradient(90deg,#fbbf24,#f97316)">
+        <div class="feature-icon" style="background:rgba(251,191,36,0.15)">👥</div>
+        <h3>Developer Community</h3>
+        <p>Join a thriving community of CS engineers and devs. Share projects, discuss trends, review code, and grow your professional network — all in one platform.</p>
+        <a href="dashboard.html" class="feature-link">Join Community →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-it-works fade-in">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto 56px;">
+      <div class="section-label">Process</div>
+      <h2>How <span class="gradient-text">Projobbers</span> Works</h2>
+      <p>Four simple steps from signup to your dream job.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-item fade-in fade-in-delay-1">
+        <div class="step-num">1</div>
+        <h4>Build Your Profile</h4>
+        <p>Import your GitHub, LinkedIn, or paste your resume. Our AI extracts skills, projects, and experience automatically.</p>
+      </div>
+      <div class="step-item fade-in fade-in-delay-2">
+        <div class="step-num">2</div>
+        <h4>Get Your Intelligence Report</h4>
+        <p>Receive a deep analysis of your abilities alongside a roadmap that fills the gaps between you and your target role.</p>
+      </div>
+      <div class="step-item fade-in fade-in-delay-3">
+        <div class="step-num">3</div>
+        <h4>Match & Verify</h4>
+        <p>Get matched with top jobs, take skill verification challenges to earn trusted badges employers actually look for.</p>
+      </div>
+      <div class="step-item fade-in fade-in-delay-4">
+        <div class="step-num">4</div>
+        <h4>Grow & Get Hired</h4>
+        <p>Work with a matched mentor, track your analytics, and land the role — with ongoing support from our AI coach.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CTA BANNER -->
+<div class="cta-banner fade-in">
+  <div class="section-label" style="margin-bottom:20px;">Ready to Transform Your Career?</div>
+  <h2>Start Free. Grow Fast.<br><span class="gradient-text">Get Hired.</span></h2>
+  <p style="max-width:440px; margin:0 auto 32px;">Join 142,000+ developers already using Projobbers to accelerate their careers. No credit card required.</p>
+  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <a href="Register form.html" class="btn btn-primary btn-lg">🚀 Create Free Account</a>
+    <a href="Register form.html" class="btn btn-secondary btn-lg">🔍 Browse Jobs</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <img src="logo.jpg" alt="Projobbers" style="height: 36px; border-radius: 6px;">
+  </div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="jobs.html">Jobs</a>
+    <a href="mentor.html">Mentors</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="hiring.html">For Employers</a>
+  </div>
+  <div class="footer-copy">© 2026 Projobbers. All rights reserved.</div>
+</footer>
+
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('landing-nav');
+    nav.style.boxShadow = window.scrollY > 40 ? 'var(--shadow-card)' : 'none';
+  });
+</script>
+  <script src="chat.js"></script>
+</body>
+</html>

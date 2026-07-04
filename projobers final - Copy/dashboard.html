@@ -1,0 +1,861 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Projobbers</title>
+  <meta name="description" content="Your personal career dashboard on Projobbers — skill radar, career roadmap, job matches, and activity feed."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="chat.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ── Profile Card ── */
+    .profile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 80px;
+      background: linear-gradient(135deg, rgba(79,142,247,0.12), rgba(139,92,246,0.08));
+    }
+    .profile-avatar {
+      width: 80px; height: 80px;
+      border-radius: var(--radius-full);
+      background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; color: white;
+      border: 3px solid rgba(79,142,247,0.4);
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+      margin-top: 20px;
+    }
+    .profile-info { position: relative; z-index: 1; margin-top: 20px; }
+    .profile-name { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
+    .profile-role { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px; }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .profile-level {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; color: var(--accent-green); font-weight: 600;
+    }
+
+    .profile-xp-bar {
+      margin-top: 8px;
+      max-width: 320px;
+    }
+    .profile-xp-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.72rem; color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* ── Quick Stats Row ── */
+    .quick-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    .qstat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex; align-items: center; gap: 16px;
+      transition: var(--transition);
+    }
+    .qstat-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+    .qstat-icon {
+      width: 46px; height: 46px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+
+    /* ── Dashboard Grid ── */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+    }
+
+    /* ── Activity Feed ── */
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .activity-dot-wrap {
+      width: 34px; height: 34px;
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .activity-text { font-size: 0.85rem; color: var(--text-primary); margin-bottom: 3px; }
+    .activity-time { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* ── Roadmap ── */
+    .roadmap-section .card { padding: 28px; }
+
+    /* Radar Chart container */
+    .radar-card { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .radar-wrap { width: 100%; max-width: 280px; }
+
+    /* ── Recommended Jobs preview ── */
+    .mini-job {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+    .mini-job:hover { border-color: var(--border-accent); }
+    .mini-job-logo {
+      width: 38px; height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .mini-job-info { flex: 1; min-width: 0; }
+    .mini-job-title { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-job-company { font-size: 0.72rem; color: var(--text-muted); }
+
+    @media (max-width: 900px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .quick-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── Edit Profile Modal ── */
+    .quiz-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .quiz-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .quiz-container {
+      width: 100%;
+      transform: translateY(30px);
+      transition: transform 0.3s ease;
+    }
+    .quiz-overlay.active .quiz-container {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 54px; width: 100%; object-fit: contain;">
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item" id="nav-dashboard.html">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="mission.html" class="nav-item" id="nav-mission.html">
+      <span class="nav-icon">🎯</span> Missions
+      <span class="nav-badge" style="background:var(--gradient-cyan)">New</span>
+    </a>
+    <a href="jobs.html" class="nav-item" id="nav-jobs.html">
+      <span class="nav-icon">🎯</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item" id="nav-interview.html">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item" id="nav-coding.html">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="skills.html" class="nav-item" id="nav-skills.html">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="mentor.html" class="nav-item" id="nav-mentor.html">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="analytics.html" class="nav-item" id="nav-analytics.html">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item" id="nav-futureplay.html">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+    <a href="internship.html" class="nav-item" id="nav-internship.html">
+      <span class="nav-icon">💼</span> Internship Sim
+      <span class="nav-badge" style="background:var(--gradient-green)">Pro</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item" id="nav-community.html">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn" data-tooltip="Notifications">
+          🔔
+          <span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" data-tooltip="Messages">💬</button>
+        <button class="icon-btn" data-tooltip="Help">❓</button>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="breadcrumb"><span>Home</span> / <span class="current">Dashboard</span></div>
+      <h2>Welcome back, <span class="gradient-text">Arjun 👋</span></h2>
+      <p>You have 12 new job matches and 2 mentor session requests today.</p>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card fade-in" style="margin-bottom:24px;">
+      <div class="profile-avatar">AK</div>
+      <div class="profile-info">
+        <div class="profile-name">Arjun Kumar</div>
+        <div class="profile-role">Full-Stack Developer · Bangalore, India · 🟢 Open to Work</div>
+        <div class="profile-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">Python</span>
+          <span class="tag">AWS</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">Docker</span>
+        </div>
+        <div class="profile-level">
+          <span class="dot dot-green"></span>
+          Level 8 — Advanced Developer
+        </div>
+        <div class="profile-xp-bar">
+          <div class="profile-xp-labels">
+            <span>7,240 XP</span>
+            <span>10,000 XP to Level 9</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" data-width="72%" style="width:0%; background: var(--gradient-green);"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-left:auto; display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+        <a href="skills.html" class="btn btn-primary btn-sm">View Full Profile</a>
+        <button class="btn btn-secondary btn-sm" onclick="openEditProfile()">Edit Profile</button>
+        <div style="display:flex; gap:16px; margin-top:8px; font-size:0.8rem; color:var(--text-muted); text-align:center;">
+          <div><div style="font-size:1.1rem; font-weight:700; color:var(--text-primary);">89%</div><div>Profile Score</div></div>
+          <div><div style="font-size:1.1rem; font-weight:700; color:var(--text-primary);">247</div><div>Connections</div></div>
+          <div><div style="font-size:1.1rem; font-weight:700; color:var(--text-primary);">14</div><div>Badges</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="quick-stats fade-in fade-in-delay-1" style="margin-bottom:24px;">
+      <div class="qstat-card">
+        <div class="qstat-icon" style="background:rgba(79,142,247,0.15)">🎯</div>
+        <div>
+          <div class="stat-label">Job Matches</div>
+          <div class="stat-value" style="font-size:1.5rem;"><span data-counter="12" data-suffix="">0</span></div>
+          <div class="stat-change up">↑ 3 new today</div>
+        </div>
+      </div>
+      <div class="qstat-card">
+        <div class="qstat-icon" style="background:rgba(16,212,142,0.15)">🏆</div>
+        <div>
+          <div class="stat-label">Verified Badges</div>
+          <div class="stat-value" style="font-size:1.5rem;"><span data-counter="14" data-suffix="">0</span></div>
+          <div class="stat-change up">↑ 2 this week</div>
+        </div>
+      </div>
+      <div class="qstat-card">
+        <div class="qstat-icon" style="background:rgba(139,92,246,0.15)">🤝</div>
+        <div>
+          <div class="stat-label">Mentor Sessions</div>
+          <div class="stat-value" style="font-size:1.5rem;"><span data-counter="7" data-suffix="">0</span></div>
+          <div class="stat-change up">↑ 1 scheduled</div>
+        </div>
+      </div>
+      <div class="qstat-card">
+        <div class="qstat-icon" style="background:rgba(6,214,214,0.15)">📈</div>
+        <div>
+          <div class="stat-label">Career Score</div>
+          <div class="stat-value" style="font-size:1.5rem;"><span data-counter="87" data-suffix="">0</span></div>
+          <div class="stat-change up">↑ 5 pts this month</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom: 20px;">🚀 Core Platform Features</h3>
+    <!-- CORE FEATURES GRID -->
+    <div class="features-grid fade-in">
+      <a href="mission.html" class="feature-card">
+        <span class="feature-badge badge-cyan">New</span>
+        <div class="feature-icon" style="background: rgba(6, 214, 214, 0.15)">🎯</div>
+        <div class="feature-title">Skill Missions</div>
+        <div class="feature-desc">Complete project-based missions and get AI evaluation.</div>
+      </a>
+      
+      <a href="interview.html" class="feature-card">
+        <span class="feature-badge badge-purple">Pro</span>
+        <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15)">🤖</div>
+        <div class="feature-title">AI Interview</div>
+        <div class="feature-desc">Practice real-time technical & HR interviews with AI feedback.</div>
+      </a>
+
+      <a href="jobs.html" class="feature-card">
+        <div class="feature-icon" style="background: rgba(79, 142, 247, 0.15)">👔</div>
+        <div class="feature-title">Job Matcher</div>
+        <div class="feature-desc">See curated jobs that match your verified skill profile perfectly.</div>
+      </a>
+
+      <a href="coding.html" class="feature-card">
+        <div class="feature-icon" style="background: rgba(16, 212, 142, 0.15)">💻</div>
+        <div class="feature-title">Coding Tests</div>
+        <div class="feature-desc">Take verified assessments to earn badges and boost profile visibility.</div>
+      </a>
+
+      <a href="course.html" class="feature-card">
+        <div class="feature-icon" style="background: rgba(249, 115, 22, 0.15)">🗺️</div>
+        <div class="feature-title">AI Roadmap</div>
+        <div class="feature-desc">Generate personalized learning paths based on your goals.</div>
+      </a>
+
+      <a href="resume.html" class="feature-card">
+        <span class="feature-badge badge-blue">AI</span>
+        <div class="feature-icon" style="background: rgba(79, 142, 247, 0.15)">📄</div>
+        <div class="feature-title">Resume Builder</div>
+        <div class="feature-desc">Create ATS-optimized resumes using your platform achievements.</div>
+      </a>
+
+      <a href="skills.html" class="feature-card">
+        <div class="feature-icon" style="background: rgba(139, 92, 246, 0.15)">🧠</div>
+        <div class="feature-title">Skill Radar</div>
+        <div class="feature-desc">Deep-dive into your skill breakdown and industry comparisons.</div>
+      </a>
+
+      <a href="futureplay.html" class="feature-card">
+        <span class="feature-badge badge-cyan">New</span>
+        <div class="feature-icon" style="background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(6,214,214,0.1))">🎮</div>
+        <div class="feature-title">FuturePlay</div>
+        <div class="feature-desc">Gamified learning — earn XP, badges, climb leaderboards & track job readiness.</div>
+      </a>
+
+      <a href="internship.html" class="feature-card">
+        <span class="feature-badge badge-green">Pro</span>
+        <div class="feature-icon" style="background: rgba(16, 212, 142, 0.15)">💼</div>
+        <div class="feature-title">Internship Simulator</div>
+        <div class="feature-desc">Get real workplace experience, complete weekly tasks, and earn verified certificates.</div>
+      </a>
+    </div>
+
+    <!-- DASHBOARD MAIN GRID -->
+    <div class="dashboard-grid">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- Career Roadmap -->
+        <div class="card road-map-section fade-in">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>🗺️ Career Roadmap</h3>
+            <a href="skills.html" class="btn btn-outline btn-sm">Full Roadmap</a>
+          </div>
+
+          <div class="roadmap-step done">
+            <div class="step-dot">✓</div>
+            <div class="step-content">
+              <h4>React & TypeScript Fundamentals</h4>
+              <p>Completed · Earned <span class="badge badge-green">Verified Badge</span></p>
+            </div>
+          </div>
+          <div class="roadmap-step done">
+            <div class="step-dot">✓</div>
+            <div class="step-content">
+              <h4>Node.js & REST APIs</h4>
+              <p>Completed · Earned <span class="badge badge-green">Verified Badge</span></p>
+            </div>
+          </div>
+          <div class="roadmap-step active">
+            <div class="step-dot">▶</div>
+            <div class="step-content">
+              <h4>System Design Patterns</h4>
+              <p>In Progress · <span style="color:var(--accent-cyan)">68% complete</span> — Est. 2 weeks</p>
+              <div class="progress-bar-wrap" style="margin-top:8px; max-width:300px;">
+                <div class="progress-bar" data-width="68%" style="width:0%; background:var(--gradient-cyan);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="step-dot">4</div>
+            <div class="step-content">
+              <h4>Cloud Architecture (AWS)</h4>
+              <p>Upcoming · <span class="badge badge-blue">Recommended</span></p>
+            </div>
+          </div>
+          <div class="roadmap-step">
+            <div class="step-dot">5</div>
+            <div class="step-content">
+              <h4>Staff Engineer / Technical Lead</h4>
+              <p>Goal Role · <span class="badge badge-purple">3 skills remaining</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hiring Candidates Section -->
+        <div class="card fade-in">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>🤝 Hiring Candidates</h3>
+            <span class="badge badge-purple">AI Matched</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div class="activity-item" style="align-items:center; padding:12px 0;">
+              <div class="profile-avatar" style="width:44px; height:44px; font-size:1rem; margin-top:0; border:2px solid rgba(79,142,247,0.4);">SJ</div>
+              <div style="flex: 1; padding:0 12px;">
+                <div style="font-size:0.9rem; font-weight:600;">Sarah Jenkins</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Senior Frontend Dev · 5 Yrs Exp</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Skills: <span style="color:var(--accent-blue);">React, TypeScript, Next.js</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="border-radius:var(--radius-full); padding:6px 16px;">+ Hire</button>
+            </div>
+            <div class="activity-item" style="align-items:center; padding:12px 0;">
+              <div class="profile-avatar" style="width:44px; height:44px; font-size:1rem; margin-top:0; background:var(--gradient-purple); border:2px solid rgba(139,92,246,0.4);">MK</div>
+              <div style="flex: 1; padding:0 12px;">
+                <div style="font-size:0.9rem; font-weight:600;">Michael Kumar</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Backend Engineer · 3 Yrs Exp</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Skills: <span style="color:var(--accent-purple);">Node.js, Python, AWS</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="border-radius:var(--radius-full); padding:6px 16px;">+ Hire</button>
+            </div>
+            <div class="activity-item" style="align-items:center; padding:12px 0; border-bottom:none;">
+              <div class="profile-avatar" style="width:44px; height:44px; font-size:1rem; margin-top:0; background:var(--gradient-cyan); border:2px solid rgba(6,214,214,0.4);">AL</div>
+              <div style="flex: 1; padding:0 12px;">
+                <div style="font-size:0.9rem; font-weight:600;">Aisha Lin</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Full-Stack Dev · 2 Yrs Exp</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">Skills: <span style="color:var(--accent-cyan);">Vue, Django, Docker</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="border-radius:var(--radius-full); padding:6px 16px;">+ Hire</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card fade-in">
+          <h3 style="margin-bottom:20px;">⚡ Recent Activity</h3>
+          <div class="activity-item">
+            <div class="activity-dot-wrap" style="background:rgba(79,142,247,0.15)">🎯</div>
+            <div>
+              <div class="activity-text"><strong>New Job Match</strong> — Senior SDE at Atlassian (94% match)</div>
+              <div class="activity-time">2 hours ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot-wrap" style="background:rgba(16,212,142,0.15)">🏆</div>
+            <div>
+              <div class="activity-text"><strong>Badge Earned</strong> — React Advanced Patterns <span class="badge badge-green" style="margin-left:4px;">✓ Verified</span></div>
+              <div class="activity-time">Yesterday at 3:22 PM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot-wrap" style="background:rgba(139,92,246,0.15)">🤝</div>
+            <div>
+              <div class="activity-text"><strong>Session Scheduled</strong> — System Design with Priya Sharma (Staff Eng, Google)</div>
+              <div class="activity-time">2 days ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot-wrap" style="background:rgba(249,115,22,0.15)">🚀</div>
+            <div>
+              <div class="activity-text"><strong>Profile View</strong> — Your profile was viewed by 3 recruiters from Flipkart</div>
+              <div class="activity-time">3 days ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot-wrap" style="background:rgba(6,214,214,0.15)">📊</div>
+            <div>
+              <div class="activity-text"><strong>Market Alert</strong> — Your skills are in <span style="color:var(--accent-cyan)">high demand</span> this quarter (+23%)</div>
+              <div class="activity-time">4 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- Skill Radar -->
+        <div class="card radar-card fade-in fade-in-delay-1">
+          <h3>🕸️ Skill Radar</h3>
+          <div class="radar-wrap">
+            <canvas id="radarChart"></canvas>
+          </div>
+          <a href="skills.html" class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">Deep Skill Analysis</a>
+        </div>
+
+        <!-- Top Job Matches -->
+        <div class="card fade-in fade-in-delay-2">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3>🎯 Top Matches</h3>
+            <a href="jobs.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div class="mini-job">
+              <div class="mini-job-logo" style="background:rgba(10,132,255,0.15)">🏢</div>
+              <div class="mini-job-info">
+                <div class="mini-job-title">Senior Full-Stack Engineer</div>
+                <div class="mini-job-company">Atlassian · Remote</div>
+              </div>
+              <span class="badge badge-green">94%</span>
+            </div>
+            <div class="mini-job">
+              <div class="mini-job-logo" style="background:rgba(249,115,22,0.15)">🔥</div>
+              <div class="mini-job-info">
+                <div class="mini-job-title">React Lead Developer</div>
+                <div class="mini-job-company">Razorpay · Bangalore</div>
+              </div>
+              <span class="badge badge-blue">91%</span>
+            </div>
+            <div class="mini-job">
+              <div class="mini-job-logo" style="background:rgba(139,92,246,0.15)">💎</div>
+              <div class="mini-job-info">
+                <div class="mini-job-title">Staff Engineer, Platform</div>
+                <div class="mini-job-company">Swiggy · Hybrid</div>
+              </div>
+              <span class="badge badge-purple">88%</span>
+            </div>
+            <div class="mini-job">
+              <div class="mini-job-logo" style="background:rgba(16,212,142,0.15)">🌐</div>
+              <div class="mini-job-info">
+                <div class="mini-job-title">Software Engineer III</div>
+                <div class="mini-job-company">Google · Hyderabad</div>
+              </div>
+              <span class="badge badge-cyan">85%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Sessions -->
+        <div class="card fade-in fade-in-delay-3">
+          <h3 style="margin-bottom:16px;">📅 Upcoming Sessions</h3>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:12px; align-items:center; padding:12px; background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:var(--radius-md);">
+              <div style="font-size:1.4rem;">🤝</div>
+              <div>
+                <div style="font-size:0.85rem; font-weight:600;">System Design Session</div>
+                <div style="font-size:0.73rem; color:var(--text-muted);">with Priya Sharma · Tomorrow 3:00 PM</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; padding:12px; background:rgba(6,214,214,0.08); border:1px solid rgba(6,214,214,0.2); border-radius:var(--radius-md);">
+              <div style="font-size:1.4rem;">📝</div>
+              <div>
+                <div style="font-size:0.85rem; font-weight:600;">AWS Challenge Assessment</div>
+                <div style="font-size:0.73rem; color:var(--text-muted);">Skill Verification · Fri, Mar 20 · 10:00 AM</div>
+              </div>
+            </div>
+          </div>
+          <a href="mentor.html" class="btn btn-secondary btn-sm" style="margin-top:16px; width:100%; justify-content:center;">Schedule More</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+  <script src="mock-responses.js"></script>
+  <script src="api-client.js"></script>
+  <script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Dynamic Radar Chart
+    let labels = ['React', 'Node.js', 'Python', 'AWS', 'System Design', 'TypeScript'];
+    let userScores = [92, 85, 78, 65, 70, 88];
+    let industryScores = [75, 70, 72, 75, 68, 73];
+
+    try {
+      const siState = JSON.parse(localStorage.getItem('si_state') || '{}');
+      if (siState && (siState.matched?.length > 0 || siState.missing?.length > 0 || siState.tags?.length > 0)) {
+        let allSkills = [...(siState.matched || []), ...(siState.missing || [])];
+        if (allSkills.length === 0) {
+          allSkills = siState.tags || [];
+        }
+        labels = Array.from(new Set(allSkills)).slice(0, 6);
+        
+        userScores = labels.map(skill => {
+          if (siState.verified && siState.verified[skill] && siState.verified[skill].passed) {
+            return Math.max(80, siState.verified[skill].score || 100);
+          }
+          if (siState.completed && siState.completed[skill]) return 70;
+          const tags = (siState.tags || []).map(t => t.toLowerCase());
+          if (tags.includes(skill.toLowerCase())) return 50;
+          return 20; // Needs learning
+        });
+
+        // Mock industry scores around 65-85
+        // Use a consistent pseudo-random to prevent jitter if we wanted, but Math.random is fine
+        industryScores = labels.map(() => Math.floor(Math.random() * 20) + 65);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Your Skills',
+          data: userScores,
+          backgroundColor: 'rgba(79,142,247,0.15)',
+          borderColor: '#4f8ef7',
+          borderWidth: 2,
+          pointBackgroundColor: '#4f8ef7',
+          pointBorderColor: '#fff',
+          pointRadius: 4,
+        }, {
+          label: 'Industry Avg',
+          data: industryScores,
+          backgroundColor: 'rgba(139,92,246,0.08)',
+          borderColor: 'rgba(139,92,246,0.5)',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointBackgroundColor: '#8b5cf6',
+          pointBorderColor: '#fff',
+          pointRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#8892b0', font: { family: 'Outfit', size: 11 }, boxWidth: 12 }
+          }
+        },
+        scales: {
+          r: {
+            min: 0, max: 100,
+            backgroundColor: 'transparent',
+            angleLines: { color: 'rgba(255,255,255,0.05)' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            pointLabels: { color: '#8892b0', font: { family: 'Outfit', size: 11 } },
+            ticks: { display: false }
+          }
+        }
+      }
+    });
+  });
+
+  // --- Edit Profile Logic ---
+
+  function openEditProfile() {
+    const modal = document.getElementById('editProfileModal');
+    if(modal) modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEditProfile() {
+    const modal = document.getElementById('editProfileModal');
+    if(modal) modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+
+  function saveProfile() {
+    const nameInput = document.getElementById('editName').value.trim();
+    const phoneInput = document.getElementById('editPhone').value.trim();
+    const emailInput = document.getElementById('editEmail').value.trim();
+    const statusInput = document.getElementById('editStatus').value;
+    
+    const photoUrlInput = document.getElementById('editPhoto').value.trim();
+    const photoFileInput = document.getElementById('editPhotoFile').files[0];
+    const nameError = document.getElementById('nameError');
+
+    // Relaxed Name Validation
+    if (nameInput.length < 2) {
+      nameError.style.display = 'block';
+      nameError.innerText = "Please enter a valid name (at least 2 characters).";
+      return;
+    } else {
+      nameError.style.display = 'none';
+    }
+
+    // Update DOM (Profile Detail Only) - Name
+    if (nameInput) {
+      document.querySelector('.profile-name').innerText = nameInput;
+      document.querySelector('.page-header h2 .gradient-text').innerText = nameInput.split(' ')[0] + " 👋";
+      const initials = nameInput.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      document.querySelector('.profile-avatar').innerText = initials;
+    }
+    
+    // Update DOM - Role/Contact Info
+    const displayPhone = phoneInput ? ` · ${phoneInput}` : '';
+    const displayEmail = emailInput ? ` · ${emailInput}` : '';
+    const fullRoleStr = `${statusInput}${displayPhone}${displayEmail}`;
+    document.querySelector('.profile-role').innerText = fullRoleStr;
+
+    // Save strictly for dashboard profile card
+    localStorage.setItem('pj_dash_name', nameInput);
+    localStorage.setItem('pj_dash_role', fullRoleStr);
+
+    // Function to apply Photo
+    const applyPhoto = (srcUrl) => {
+      const av = document.querySelector('.profile-avatar');
+      if(av) {
+          av.innerHTML = `<img src="${srcUrl}" alt="Profile" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+          av.style.background = 'transparent';
+          av.style.border = 'none';
+      }
+      localStorage.setItem('pj_dash_photo', srcUrl);
+      localStorage.removeItem('pj_dash_initials');
+    };
+
+    // Update Photo
+    if (photoFileInput) {
+      const reader = new FileReader();
+      reader.onload = (e) => applyPhoto(e.target.result);
+      reader.readAsDataURL(photoFileInput);
+    } else if (photoUrlInput) {
+      applyPhoto(photoUrlInput);
+    } else {
+      localStorage.setItem('pj_dash_initials', nameInput.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase());
+    }
+
+    closeEditProfile();
+  }
+
+  // Reload strictly Profile Detail card on refresh
+  document.addEventListener('DOMContentLoaded', () => {
+    const dashName = localStorage.getItem('pj_dash_name');
+    const dashRole = localStorage.getItem('pj_dash_role');
+    const dashPhoto = localStorage.getItem('pj_dash_photo');
+    const dashInitials = localStorage.getItem('pj_dash_initials');
+
+    if (dashName) {
+      document.querySelector('.profile-name').innerText = dashName;
+      document.querySelector('.page-header h2 .gradient-text').innerText = dashName.split(' ')[0] + " 👋";
+    }
+    if (dashRole) {
+      document.querySelector('.profile-role').innerText = dashRole;
+    }
+    const av = document.querySelector('.profile-avatar');
+    if (av) {
+      if (dashPhoto) {
+        av.innerHTML = `<img src="${dashPhoto}" alt="Profile" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+        av.style.background = 'transparent';
+        av.style.border = 'none';
+      } else if (dashInitials) {
+        av.innerText = dashInitials;
+      }
+    }
+  });
+</script>
+
+<!-- Edit Profile Modal -->
+<div class="quiz-overlay" id="editProfileModal">
+  <div class="quiz-container" style="max-width: 500px; text-align:left;">
+    <div style="background:var(--bg-card); padding:32px; border-radius:var(--radius-lg); border:1px solid var(--border);">
+      <h2 style="margin-bottom:24px;">Edit Profile</h2>
+      
+      <div class="form-group" style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">Full Name</label>
+        <input type="text" id="editName" class="form-control" style="width:100%; padding:10px;" placeholder="e.g. Arjun Kumar" value="Arjun Kumar">
+        <div id="nameError" style="color:var(--accent-orange); font-size:0.8rem; margin-top:4px; display:none;">Please enter a valid name (at least 2 characters).</div>
+      </div>
+      
+      <div class="form-group" style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">Phone Number</label>
+        <input type="tel" id="editPhone" class="form-control" style="width:100%; padding:10px;" placeholder="e.g. +91 9876543210">
+      </div>
+      
+      <div class="form-group" style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">Email Address</label>
+        <input type="email" id="editEmail" class="form-control" style="width:100%; padding:10px;" placeholder="e.g. arjun@example.com">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">What are you currently doing?</label>
+        <select id="editStatus" class="form-control" style="width:100%; padding:10px;">
+          <option value="Student">Student</option>
+          <option value="Fresher">Fresher</option>
+          <option value="Unemployment">Unemployment</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-bottom:24px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">Profile Photo</label>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+           <input type="file" id="editPhotoFile" accept="image/*" class="form-control" style="width:100%; padding:8px;">
+           <span style="font-size:0.85rem; color:var(--text-muted); text-align:center;">OR paste an image URL below:</span>
+           <input type="url" id="editPhoto" class="form-control" style="width:100%; padding:10px;" placeholder="https://example.com/photo.jpg">
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button class="btn btn-outline" onclick="closeEditProfile()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProfile()" style="background:var(--gradient-purple);">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="mock-responses.js"></script>
+  <script src="api-client.js"></script>
+  <script src="app.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>

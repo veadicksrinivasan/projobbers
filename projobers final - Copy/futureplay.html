@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FuturePlay — Gamified Learning | Projobbers</title>
+  <meta name="description" content="FuturePlay transforms your career journey into a game. Earn XP, unlock badges, maintain streaks, and track your job readiness score on Projobbers."/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="futureplay.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+
+<div class="app-shell">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo" style="padding-bottom:24px; margin-bottom:16px;">
+      <img src="logo.jpg" alt="Projobbers" style="height:54px;width:100%;object-fit:contain;" onerror="this.style.display='none'; this.nextSibling.style.display='flex';">
+      <div style="display:none; align-items:center; gap:10px; padding:0 8px;">
+        <div class="logo-icon">🚀</div>
+        <span class="logo-text">Projobbers</span>
+      </div>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item" id="nav-dashboard.html">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="mission.html" class="nav-item" id="nav-mission.html">
+      <span class="nav-icon">🎯</span> Missions
+      <span class="nav-badge" style="background:var(--gradient-cyan)">New</span>
+    </a>
+    <a href="jobs.html" class="nav-item" id="nav-jobs.html">
+      <span class="nav-icon">💼</span> Job Matcher
+      <span class="nav-badge">12</span>
+    </a>
+    <a href="interview.html" class="nav-item" id="nav-interview.html">
+      <span class="nav-icon">🤖</span> AI Interview
+      <span class="nav-badge" style="background:var(--gradient-purple)">New</span>
+    </a>
+    <a href="coding.html" class="nav-item" id="nav-coding.html">
+      <span class="nav-icon">💻</span> Coding Tests
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Pro</span>
+    </a>
+    <a href="course.html" class="nav-item" id="nav-course.html">
+      <span class="nav-icon">🗺️</span> AI Roadmap
+    </a>
+    <a href="resume.html" class="nav-item" id="nav-resume.html">
+      <span class="nav-icon">📄</span> Resume Builder
+      <span class="nav-badge" style="background:var(--gradient-purple)">AI</span>
+    </a>
+
+    <div class="nav-section-label">Growth</div>
+    <a href="skills.html" class="nav-item" id="nav-skills.html">
+      <span class="nav-icon">🧠</span> Skills
+    </a>
+    <a href="mentor.html" class="nav-item" id="nav-mentor.html">
+      <span class="nav-icon">🤝</span> Mentor Hub
+    </a>
+    <a href="analytics.html" class="nav-item" id="nav-analytics.html">
+      <span class="nav-icon">📊</span> Analytics
+    </a>
+    <a href="futureplay.html" class="nav-item active" id="nav-futureplay.html">
+      <span class="nav-icon">🎮</span> FuturePlay
+      <span class="nav-badge" style="background:linear-gradient(135deg,#8b5cf6,#06d6d6)">New</span>
+    </a>
+
+    <div class="nav-section-label">Platform</div>
+    <a href="community.html" class="nav-item" id="nav-community.html">
+      <span class="nav-icon">💬</span> Community
+      <span class="nav-badge" style="background:var(--gradient-cyan)">Hub</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="user-mini">
+        <div class="user-avatar-sm">AK</div>
+        <div class="user-info-sm">
+          <div class="user-name">Arjun Kumar</div>
+          <div class="user-role">Full-Stack Dev</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN ═══════════════════ -->
+  <main class="main-content">
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-actions">
+        <button class="icon-btn" data-tooltip="Notifications">🔔<span class="notif-dot"></span></button>
+        <button class="icon-btn" data-tooltip="Messages">💬</button>
+        <button class="icon-btn" data-tooltip="Help">❓</button>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="breadcrumb">
+        <span>Home</span> / <span>Growth</span> / <span class="current">FuturePlay</span>
+      </div>
+      <h2>🎮 <span class="gradient-text" style="background:linear-gradient(135deg,#8b5cf6,#4f8ef7,#06d6d6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">FuturePlay</span> — Gamified Learning</h2>
+      <p>Level up your career through interactive quests, earn badges, climb the leaderboard, and track your job readiness in real time.</p>
+    </div>
+
+    <!-- ══ HERO XP BANNER ══ -->
+    <div class="fp-hero fade-in">
+      <div class="fp-hero-grid">
+        <div>
+          <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+            <div class="fp-level-ring">
+              <span class="lv-num" id="fp-level-num">6</span>
+              <span class="lv-label">Level</span>
+            </div>
+            <div>
+              <div class="fp-hero-title">Arjun Kumar</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                <span class="badge badge-purple" id="fp-user-level-label">Mid-Level Developer</span>
+                <span class="badge badge-cyan">🔥 Active</span>
+              </div>
+              <div class="fp-hero-sub">Keep going! You're <strong style="color:var(--accent-purple);" id="fp-xp-pct">64%</strong> of the way to Level 7.</div>
+            </div>
+          </div>
+
+          <div class="fp-xp-bar-wrap">
+            <div class="fp-xp-labels">
+              <span>XP: <strong id="fp-xp-current">3,240</strong></span>
+              <span>Next Level: <strong id="fp-xp-next">5,000</strong> XP</span>
+            </div>
+            <div class="fp-xp-track">
+              <div class="fp-xp-fill" id="fp-xp-fill" style="width:0%"></div>
+            </div>
+          </div>
+
+          <div class="fp-hero-stats">
+            <div class="fp-hero-stat">
+              <div class="val" id="fp-stat-badges">4</div>
+              <div class="lbl">Badges Earned</div>
+            </div>
+            <div class="fp-hero-stat">
+              <div class="val" id="fp-stat-streak">7 days</div>
+              <div class="lbl">Current Streak</div>
+            </div>
+            <div class="fp-hero-stat">
+              <div class="val" id="fp-stat-quests">4/28</div>
+              <div class="lbl">Quests Done</div>
+            </div>
+            <div class="fp-hero-stat">
+              <div class="val" style="color:var(--accent-green)">74%</div>
+              <div class="lbl">Job Readiness</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Badge Showcase -->
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center;position:relative;z-index:1;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:180px;">
+            <div style="width:54px;height:54px;border-radius:50%;background:rgba(249,115,22,0.15);border:2px solid rgba(249,115,22,0.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 20px rgba(249,115,22,0.3);" title="Streak Master">🔥</div>
+            <div style="width:54px;height:54px;border-radius:50%;background:rgba(79,142,247,0.15);border:2px solid rgba(79,142,247,0.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 20px rgba(79,142,247,0.3);" title="Speed Coder">⚡</div>
+            <div style="width:54px;height:54px;border-radius:50%;background:rgba(16,212,142,0.15);border:2px solid rgba(16,212,142,0.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 20px rgba(16,212,142,0.3);" title="First Project">🌟</div>
+            <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.05);border:2px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.6rem;opacity:0.4;" title="Locked">🔒</div>
+          </div>
+          <div style="font-size:0.72rem;color:var(--text-muted);text-align:center;">4 of 12 badges earned</div>
+          <a href="#badges-section" class="btn btn-outline btn-sm">View All Badges</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ STREAK BAR ══ -->
+    <div class="streak-bar fade-in">
+      <div class="streak-fire">🔥</div>
+      <div>
+        <div class="streak-text"><span id="fp-streak-count">7</span>-Day Streak! Keep it up!</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">Complete at least 1 quest today to maintain your streak.</div>
+      </div>
+      <div class="streak-days" id="fp-streak-days"></div>
+    </div>
+
+    <!-- ══ MAIN LAYOUT ══ -->
+    <div class="fp-layout">
+
+      <!-- ══ LEFT / MAIN COLUMN ══ -->
+      <div class="fp-main">
+
+        <!-- Daily Challenges -->
+        <div class="card fade-in">
+          <div class="fp-section-header">
+            <h3>⚡ Today's Challenges</h3>
+            <span class="badge badge-orange">Resets in 6h 42m</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="fp-daily-challenges">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Career Path Quests -->
+        <div class="card fade-in fade-in-delay-1">
+          <div class="fp-section-header">
+            <h3>🗺️ Career Path Quests</h3>
+            <span class="badge badge-blue" id="fp-path-progress">Loading…</span>
+          </div>
+
+          <!-- Path Tabs -->
+          <div class="fp-path-tabs">
+            <button class="fp-tab active" data-path="fullstack">🌐 Full-Stack Dev</button>
+            <button class="fp-tab" data-path="datascience">📊 Data Science</button>
+            <button class="fp-tab" data-path="cloud">☁️ Cloud & DevOps</button>
+            <button class="fp-tab" data-path="mobile">📱 Mobile Dev</button>
+          </div>
+
+          <!-- Path Progress Bar -->
+          <div style="margin-bottom:18px;">
+            <div class="fp-xp-track" style="height:8px;">
+              <div class="fp-xp-fill" id="fp-path-progress-bar" style="width:0%;background:linear-gradient(90deg,#8b5cf6,#4f8ef7)"></div>
+            </div>
+          </div>
+
+          <!-- Quest List -->
+          <div id="fp-quest-list" class="fp-quest-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Skill Mastery -->
+        <div class="card fade-in fade-in-delay-2">
+          <div class="fp-section-header">
+            <h3>🧠 Skill Mastery Progress</h3>
+            <a href="skills.html" class="btn btn-outline btn-sm">Full Analysis</a>
+          </div>
+          <div id="fp-skill-mastery" class="fp-skill-mastery">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="card fade-in fade-in-delay-3" id="badges-section">
+          <div class="fp-section-header">
+            <h3>🏅 Achievement Badges</h3>
+            <span class="badge badge-orange" id="fp-badges-earned-count">4 / 12 Earned</span>
+          </div>
+          <div class="fp-badges-grid" id="fp-badges-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+      </div><!-- /fp-main -->
+
+      <!-- ══ RIGHT / SIDEBAR COLUMN ══ -->
+      <div class="fp-sidebar-col">
+
+        <!-- Job Readiness Score -->
+        <div class="fp-readiness-card card fade-in">
+          <h3 style="margin-bottom:4px;">📈 Job Readiness Score</h3>
+          <p style="font-size:0.8rem;">Based on your skills, projects & activity</p>
+          <div class="fp-readiness-ring-wrap">
+            <div class="score-ring" id="fp-readiness-ring"
+              data-score="74" data-label="Job Ready"
+              data-color="#10d48e" data-color2="#06d6d6"
+              data-size="110" data-stroke="8">
+            </div>
+          </div>
+          <div class="fp-readiness-breakdown" id="fp-readiness-breakdown">
+            <!-- Rendered by JS -->
+          </div>
+          <a href="skills.html" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:16px;">
+            Boost Your Score →
+          </a>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="card fade-in fade-in-delay-1">
+          <div class="fp-section-header">
+            <h3>🏆 Leaderboard</h3>
+            <span class="badge badge-purple">This Week</span>
+          </div>
+          <div class="fp-leaderboard" id="fp-leaderboard">
+            <!-- Rendered by JS -->
+          </div>
+          <div style="margin-top:14px;text-align:center;font-size:0.8rem;color:var(--text-muted);">
+            Earn XP to climb the leaderboard! 🚀
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card fade-in fade-in-delay-2">
+          <h3 style="margin-bottom:16px;">⚡ Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="coding.html" class="btn btn-secondary" style="width:100%;justify-content:flex-start;">
+              💻 Start Coding Challenge
+            </a>
+            <a href="interview.html" class="btn btn-secondary" style="width:100%;justify-content:flex-start;">
+              🤖 Practice AI Interview
+            </a>
+            <a href="course.html" class="btn btn-secondary" style="width:100%;justify-content:flex-start;">
+              🗺️ Generate AI Roadmap
+            </a>
+            <a href="mentor.html" class="btn btn-secondary" style="width:100%;justify-content:flex-start;">
+              🤝 Book Mentor Session
+            </a>
+          </div>
+        </div>
+
+        <!-- XP History mini chart -->
+        <div class="card fade-in fade-in-delay-3">
+          <h3 style="margin-bottom:16px;">📊 XP Earned This Week</h3>
+          <canvas id="fp-xp-chart" height="140"></canvas>
+        </div>
+
+      </div><!-- /fp-sidebar-col -->
+
+    </div><!-- /fp-layout -->
+
+  </main>
+</div>
+
+<!-- ════════════ QUEST MODAL — INTERACTIVE LEARNING ════════════ -->
+<div class="modal-overlay" id="fp-quest-modal">
+  <div class="modal" style="max-width:720px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div id="fp-modal-icon" style="font-size:2rem;"></div>
+        <div>
+          <h3 id="fp-modal-title" style="margin-bottom:4px;"></h3>
+          <div id="fp-modal-type" style="font-size:0.78rem;color:var(--text-muted);"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeQuestModal()">✕</button>
+    </div>
+
+    <!-- Reward Bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius-md);margin-bottom:20px;">
+      <span style="font-size:0.85rem;font-weight:600;">🎁 Reward</span>
+      <span class="fp-quest-xp" id="fp-modal-xp" style="margin-left:0;"></span>
+    </div>
+
+    <!-- Step Tabs -->
+    <div id="fp-quest-step-tabs" style="display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;"></div>
+
+    <!-- Step Progress -->
+    <div style="margin-bottom:20px;">
+      <div class="fp-xp-track" style="height:6px;">
+        <div id="fp-quest-progress-bar" class="fp-xp-fill" style="width:0%;background:var(--gradient-green);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span style="font-size:0.72rem;color:var(--text-muted);" id="fp-quest-step-label">Step 1 of 3</span>
+        <span style="font-size:0.72rem;color:var(--text-muted);" id="fp-quest-timer"></span>
+      </div>
+    </div>
+
+    <!-- Dynamic Content Area -->
+    <div id="fp-quest-content" style="min-height:250px;">
+      <!-- JS renders: video, reading, quiz, or code editor here -->
+    </div>
+
+    <!-- Navigation -->
+    <div style="margin-top:24px;display:flex;gap:12px;">
+      <button class="btn btn-secondary" id="fp-quest-prev-btn" onclick="questPrevStep()" style="flex:1;display:none;">← Previous</button>
+      <button class="btn btn-primary" id="fp-quest-next-btn" style="flex:2;background:linear-gradient(135deg,#8b5cf6,#4f8ef7);">
+        Next Step →
+      </button>
+    </div>
+
+    <!-- Feedback area (shown after quiz) -->
+    <div id="fp-quest-feedback" style="display:none;margin-top:16px;padding:16px;border-radius:var(--radius-md);"></div>
+  </div>
+</div>
+
+<!-- ════════════ ACHIEVEMENT TOAST ════════════ -->
+<div class="fp-toast" id="fp-toast">
+  <div class="fp-toast-icon">🏅</div>
+  <div>
+    <div class="fp-toast-title">Achievement Unlocked!</div>
+    <div class="fp-toast-sub">You completed a quest</div>
+  </div>
+  <div class="fp-toast-xp">+200 XP</div>
+</div>
+
+<!-- Scripts -->
+<script src="mock-responses.js"></script>
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+<script src="futureplay.js"></script>
+
+<script>
+  // ── XP History Chart ──
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('fp-xp-chart');
+    if (!ctx) return;
+    new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'XP Earned',
+          data: [320, 480, 150, 620, 340, 710, 0],
+          backgroundColor: [
+            'rgba(139,92,246,0.7)','rgba(79,142,247,0.7)','rgba(139,92,246,0.5)',
+            'rgba(6,214,214,0.7)','rgba(79,142,247,0.6)','rgba(139,92,246,0.8)',
+            'rgba(255,255,255,0.1)'
+          ],
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: { label: ctx => `+${ctx.raw} XP` },
+            backgroundColor: 'rgba(13,18,37,0.95)',
+            titleFont: { family:'Outfit' },
+            bodyFont:  { family:'Outfit' },
+          }
+        },
+        scales: {
+          x: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#8892b0', font:{ family:'Outfit', size:11 } } },
+          y: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#8892b0', font:{ family:'Outfit', size:11 }, callback: v => '+'+v } }
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

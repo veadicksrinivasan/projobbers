@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Projobbers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: var(--bg-primary);
+      margin: 0; font-family: 'Outfit', sans-serif;
+    }
+    .register-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 40px; width: 100%; max-width: 450px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      position: relative; z-index: 10;
+    }
+    .register-card h2 { margin-bottom: 8px; text-align: center; font-size: 1.6rem; color: var(--text-primary); }
+    .register-card p {
+      text-align: center; color: var(--text-secondary);
+      font-size: 0.9rem; margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.85rem; color: var(--text-secondary);
+    }
+    .form-control {
+      box-sizing: border-box;
+      width: 100%; padding: 12px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); background: var(--bg-secondary);
+      color: var(--text-primary); font-family: inherit; font-size: 0.95rem;
+    }
+    .form-control:focus { outline: none; border-color: var(--accent-blue); }
+    .btn-submit {
+      width: 100%; padding: 14px; margin-top: 10px;
+      background: var(--gradient-primary); color: white;
+      border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 1rem;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-submit:hover { opacity: 0.9; }
+    
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .field-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .field-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+    .field-card.selected {
+      background: rgba(79, 142, 247, 0.1);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(79, 142, 247, 0.2);
+    }
+    .field-icon {
+      font-size: 1.5rem;
+    }
+    .btn-back {
+      padding: 14px; border-radius: var(--radius-md); 
+      border: 1px solid var(--border); background: var(--bg-secondary); 
+      color: var(--text-primary); cursor: pointer;
+      font-weight: 600; font-size: 1rem; transition: background 0.2s;
+    }
+    .btn-back:hover { background: var(--bg-primary); }
+  </style>
+</head>
+<body>
+  <!-- BACKGROUND GLOWS -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  
+  <div class="register-card">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <img src="logo.jpg" alt="Projobbers" style="height: 48px; border-radius: 8px;" onerror="this.style.display='none'">
+    </div>
+    
+    <form id="registerForm">
+      <!-- STEP 1 -->
+      <div id="step1">
+        <h2>Create Account</h2>
+        <p>Join Projobbers to accelerate your career.</p>
+        
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="regName" class="form-control" placeholder="e.g. Arjun Kumar" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="e.g. hello@example.com" required>
+        </div>
+        <button type="button" id="btnNextStep" class="btn-submit">Next Step →</button>
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted);">
+          By registering, you agree to our Terms and Privacy Policy.
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2" style="display: none;">
+        <h2>Your IT Career Path</h2>
+        <p>What field do you want to master?</p>
+        
+        <div class="field-grid">
+           <div class="field-card" data-role="Full-Stack Developer">
+              <span class="field-icon">🌐</span>
+              <span>Web Dev</span>
+           </div>
+           <div class="field-card" data-role="Data Scientist">
+              <span class="field-icon">📊</span>
+              <span>Data Science</span>
+           </div>
+           <div class="field-card" data-role="AI / ML Engineer">
+              <span class="field-icon">🤖</span>
+              <span>AI & ML</span>
+           </div>
+           <div class="field-card" data-role="Cloud Architect">
+              <span class="field-icon">☁️</span>
+              <span>Cloud Comp</span>
+           </div>
+           <div class="field-card" data-role="Cybersecurity Analyst">
+              <span class="field-icon">🔒</span>
+              <span>Cybersecurity</span>
+           </div>
+           <div class="field-card" data-role="Mobile App Developer">
+              <span class="field-icon">📱</span>
+              <span>App Dev</span>
+           </div>
+           <div class="field-card" data-role="UI/UX Designer">
+              <span class="field-icon">✨</span>
+              <span>UI/UX Design</span>
+           </div>
+           <div class="field-card" data-role="DevOps Engineer">
+              <span class="field-icon">⚙️</span>
+              <span>DevOps</span>
+           </div>
+        </div>
+        
+        <input type="hidden" id="regRole" required>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn-back" id="btnPrevStep" style="flex: 1;">← Back</button>
+            <button type="submit" class="btn-submit" style="flex: 2; margin-top: 0;">Finish Registration</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const btnNextStep = document.getElementById('btnNextStep');
+    const btnPrevStep = document.getElementById('btnPrevStep');
+    const regName = document.getElementById('regName');
+    const regEmail = document.getElementById('regEmail');
+    const roleInput = document.getElementById('regRole');
+    const fieldCards = document.querySelectorAll('.field-card');
+
+    btnNextStep.addEventListener('click', () => {
+      if(regName.checkValidity() && regEmail.checkValidity()) {
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+      } else {
+        regName.reportValidity();
+        regEmail.reportValidity();
+      }
+    });
+
+    btnPrevStep.addEventListener('click', () => {
+      step2.style.display = 'none';
+      step1.style.display = 'block';
+    });
+
+    fieldCards.forEach(card => {
+      card.addEventListener('click', () => {
+        fieldCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        roleInput.value = card.getAttribute('data-role');
+      });
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if(!roleInput.value) {
+        alert("Please select an IT field to continue.");
+        return;
+      }
+      
+      const nameInput = regName.value.trim();
+      const roleVal = roleInput.value.trim();
+      
+      // Save details to localStorage to be read by dashboard.html exactly as it expects
+      if(nameInput) {
+        localStorage.setItem('pj_dash_name', nameInput);
+        
+        // Auto-generate initials
+        const parts = nameInput.split(' ').filter(p => p.length > 0);
+        const initials = parts.map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        localStorage.setItem('pj_dash_initials', initials);
+        localStorage.removeItem('pj_dash_photo'); // clear any old photo
+      }
+      
+      if(roleVal) {
+        localStorage.setItem('pj_dash_role', roleVal + ' · Pending Verification');
+      }
+      
+      // Redirect to dashboard page natively
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>
